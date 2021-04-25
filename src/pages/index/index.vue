@@ -1,171 +1,141 @@
 <template>
-  <view class="content">
-    <view class="text-area">
-      <text class="title mt-16 w-1_2 h-1_2">{{ title }}</text>
-    </view>
-    <button @click="uploadImg">上传图片</button>
-    <button @click="uploadVideo">上传视频</button>
-    <view class="">
-      <img :src="img" mode="aspectFit" alt="">
-    </view>
-    <view class="">
-      <video :src="video"></video>
-    </view>
+  <view class="content container">
+    <Lingzhi v-for="(item,index) in list" :key="item.id"
+             :imgList="item.imgList"
+             :avatar="item.avatar"
+             :name="item.name"
+             :publishTime="item.publishTime"
+             :content="item.content"
+             :isLike="item.isLike"
+             :isGiveReward="item.isGiveReward"
+             :likeNumber="item.likeNumber"
+             :giveRewardNumber="item.giveRewardNumber"
+             :chatNumber="item.chatNumber"
+             @clickDynamic="clickDynamic(index)"
+             @clickUser="clickUser(item.id)">
+    </Lingzhi>
   </view>
 </template>
 
 <script>
-import { dbRequest } from '@/api/common'
+import Lingzhi from '@/components/lingzhi/lingzhi'
 
 export default {
+  components: {
+    Lingzhi,
+  },
   data() {
     return {
       title: 'Hello',
-      img: 'cloud://lxx-1gg4sx24e0ca54d5.6c78-lxx-1gg4sx24e0ca54d5-1305723620/my-image.jpg',
-      video: 'cloud://lxx-1gg4sx24e0ca54d5.6c78-lxx-1gg4sx24e0ca54d5-1305723620/my-image.mov'
+      list: [
+        {
+          id: 1,
+          avatar: 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1950846641,3729028697&fm=26&gp=0.jpg',
+          name: '执笔看墨花开',
+          publishTime: 1617086756,
+          content: '中国外交官这样讽加拿大总理，算不算骂？该不该骂？',
+          imgList: [
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg'
+          ],
+          isLike: true,
+          isGiveReward: true,
+          likeNumber: 2,
+          giveRewardNumber: 2,
+          chatNumber: 2,
+          isFocusOn: true,
+        },
+
+        {
+          id: 2,
+          avatar: 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2291332875,175289127&fm=26&gp=0.jpg',
+          name: '执笔看墨花开',
+          publishTime: 1617036656,
+          content: '  足不出户享国内核医学领域顶级专家云诊断，“中山-联影”分子影像远程互联融合创新中心揭牌 ',
+          imgList: [
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg'
+          ],
+          isLike: false,
+          isGiveReward: false,
+          likeNumber: 0,
+          giveRewardNumber: 0,
+          chatNumber: 2,
+          isFocusOn: false,
+        },
+        {
+          id: 3,
+          avatar: 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1950846641,3729028697&fm=26&gp=0.jpg',
+          name: '执笔看墨花开',
+          publishTime: 1617046556,
+          content: '  外交部：一小撮国家和个人编造所谓新疆“强迫劳动”的故事，其心何其毒也！ ',
+          imgList: [
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg'
+          ],
+          isLike: true,
+          isGiveReward: false,
+          likeNumber: 4,
+          giveRewardNumber: 22,
+          chatNumber: 52,
+        },
+        {
+          id: 4,
+          avatar: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2590128318,632998727&fm=26&gp=0.jpg',
+          name: '萧玲芝',
+          publishTime: 1616086456,
+          content: 'DCloud有800万开发者,uni统计手机端月活12亿。是开发者数量和案例最丰富的多端开发框架。 欢迎知名开发商提交案例或接入uni统计。 新冠抗疫专区案例 uni-app助力',
+          imgList: [
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg'
+          ],
+          isLike: true,
+          isGiveReward: false,
+          likeNumber: 25,
+          giveRewardNumber: 0,
+          chatNumber: 7,
+        },
+        {
+          id: 5,
+          avatar: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2590128318,632998727&fm=26&gp=0.jpg',
+          name: '萧玲芝',
+          publishTime: 1607086356,
+          content: '划个水',
+          imgList: [
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg',
+            'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2369680151,826506100&fm=26&gp=0.jpg',
+            'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1976832114,2993359804&fm=26&gp=0.jpg'
+          ],
+          isLike: true,
+          isGiveReward: true,
+          likeNumber: 3,
+          giveRewardNumber: 2,
+          chatNumber: 2,
+        }
+      ],
     }
   },
   onLoad() {
 
   },
   methods: {
-    getUserProfile() {
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          console.log(res)
-          // this.setData({
-          //   avatarUrl: res.userInfo.avatarUrl,
-          //   userInfo: res.userInfo,
-          //   hasUserInfo: true,
-          // })
-        }
-      })
+    clickDynamic(e) {
+      console.log('childDynamic')
     },
-    // 上传图片
-    uploadImg() {
-      // 选择图片
-      uni.chooseImage({
-        count: 1,
-        sizeType: ['original', 'compressed'],
-        sourceType: ['album', 'camera'],
-        success: (res) => {
-          wx.showLoading({
-            title: '上传中',
-          })
-
-          const filePath = res.tempFilePaths[0]
-
-          // 上传图片
-          const cloudPath = `my-image${filePath.match(/\.[^.]+?$/)[0]}`
-          wx.cloud.uploadFile({
-            cloudPath,
-            filePath,
-            success: res => {
-              console.log('[上传文件] 成功：', res)
-              console.log(cloudPath, filePath)
-
-              // app.globalData.fileID = res.fileID
-              // app.globalData.cloudPath = cloudPath
-              // app.globalData.imagePath = filePath
-
-              // wx.navigateTo({
-              //   url: '../storageConsole/storageConsole'
-              // })
-            },
-            fail: e => {
-              console.error('[上传文件] 失败：', e)
-              wx.showToast({
-                icon: 'none',
-                title: '上传失败',
-              })
-            },
-            complete: () => {
-              wx.hideLoading()
-            }
-          })
-        },
-        fail: e => {
-          console.error(e)
-        }
-      })
+    // 点击用户信息
+    clickUser(e) {
+      console.log(e)
+      console.log('childUser')
     },
-    uploadVideo(){
-      uni.chooseVideo({
-        maxDuration: 999999,
-        sourceType: ['album', 'camera'],
-        compressed: false,
-        success: (res) => {
-          wx.showLoading({
-            title: '上传中',
-          })
-
-          // duration: 5.45
-          // errMsg: "chooseVideo:ok"
-          // height: 542
-          // size: 463583
-          // tempFilePath: "http://tmp/61dNjAPTSXHo5f2b570fc1c42af867646c60b96b23e7.mov"
-          // thumbTempFilePath: "http://tmp/Z1ha3xWriQxp5c5219652cdb93bc4b1d170cf8fcb437.jpg"
-          // width: 1376
-          const filePath = res.tempFilePath
-
-          // 上传图片
-          const cloudPath = `my-video${filePath.match(/\.[^.]+?$/)[0]}`
-          wx.cloud.uploadFile({
-            cloudPath,
-            filePath,
-            success: res => {
-              console.log('[上传文件] 成功：', res)
-              console.log(cloudPath, filePath)
-
-              // app.globalData.fileID = res.fileID
-              // app.globalData.cloudPath = cloudPath
-              // app.globalData.imagePath = filePath
-
-              // wx.navigateTo({
-              //   url: '../storageConsole/storageConsole'
-              // })
-            },
-            fail: e => {
-              console.error('[上传文件] 失败：', e)
-              wx.showToast({
-                icon: 'none',
-                title: '上传失败',
-              })
-            },
-            complete: () => {
-              wx.hideLoading()
-            }
-          })
-        },
-        fail: e => {
-          console.error(e)
-        }
-      })
-    }
-  },
-  mounted() {
-    this.getUserProfile()
-    const actions = [
-      { method: 'where', condition: { count: 1 } },
-      { method: 'get' }
-    ]
-    const actions1 = [
-      { method: 'where', condition: { count: 1 } },
-      { method: 'update', condition: { data: { count: 2 } } }
-    ]
-    // dbRequest('video', actions).then(res => {
-    //
-    // })
-    // dbRequest('video', actions1).then(res => {
-    //   console.log(res)
-    // })
   },
 }
 </script>
 
-<style lang="scss">
+<style>
 .content {
   display: flex;
   flex-direction: column;
