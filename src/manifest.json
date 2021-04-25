@@ -54,7 +54,7 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        "appid" : "wx0db38963938fe329",
+        "appid" : "wx79a9f8e233732a54",
         "setting" : {
             "urlCheck" : false
         },
@@ -85,10 +85,6 @@
         //     "target": "http://39.97.230.231:9001/",
         //     "changeOrigin": true
         //   },
-        //   "/common": {
-        //     "target": "http://39.97.230.231:9001/",
-        //     "changeOrigin": true
-        //   }
         // }
         "router" : {
             "mode" : "hash"
