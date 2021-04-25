@@ -14,6 +14,24 @@
       "style": {
         "navigationBarTitleText": "表单"
       }
+    },
+    {
+      "path": "pages/photo-detail/index",
+      "style": {
+        "navigationBarTitleText": "照片详情"
+      }
+    },
+    {
+      "path": "pages/addPhotoPage/index",
+      "style": {
+        "navigationBarTitleText": "添加图片"
+      }
+    },
+    {
+      "path": "pages/addVideoPage/index",
+      "style": {
+        "navigationBarTitleText": "添加视频"
+      }
     }
   ],
   "tabBar": {
@@ -38,7 +56,7 @@
   "globalStyle": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "吕萧潇",
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true,
     "onReachBottomDistance": 60,

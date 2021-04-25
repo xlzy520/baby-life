@@ -2,8 +2,28 @@ import _request from '@/utils/request'
 
 const baseUrl = '/list/'
 const request = (url, ...arg) => _request(baseUrl + url, ...arg)
+const db = wx.cloud.database()
 
 export default {
+  getPhotoList(){
+    db.collection('photo').get().then(res=>{
+      console.log(res)
+      return res
+    })
+  },
+  getVideoList(){
+    db.collection('video').get().then(res=>{
+      console.log(res)
+      return res
+    })
+  },
+  getBlogList(){
+    db.collection('blog').get().then(res=>{
+      console.log(res)
+      return res
+    })
+  },
+  
   list(data) {
     // mock
     return new Promise((resolve, reject) => {
