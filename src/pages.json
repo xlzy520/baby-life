@@ -1,0 +1,47 @@
+{
+  "easycom": {
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/form/index",
+      "style": {
+        "navigationBarTitleText": "表单"
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#7F8389",
+    "selectedColor": "#0091FF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/static/tabBar/icon-home.png",
+        "selectedIconPath": "/static/tabBar/icon-home-selected.png"
+      },
+      {
+        "pagePath": "pages/form/index",
+        "text": "表单",
+        "iconPath": "/static/tabBar/icon-tabbar-mine.png",
+        "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "globalStyle": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true,
+    "onReachBottomDistance": 60,
+    "usingComponents": {}
+  }
+}
