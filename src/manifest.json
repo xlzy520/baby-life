@@ -1,7 +1,7 @@
 {
-    "name" : "uniapp-tailwind-uview-starter",
+    "name" : "baby-life",
     "appid" : "__UNI__6CC1BCA",
-    "description" : "a uniapp-tailwind-uview-starter",
+    "description" : "a project base uniapp-tailwind-starter",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
