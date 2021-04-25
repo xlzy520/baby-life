@@ -10,9 +10,15 @@
       }
     },
     {
-      "path": "pages/form/index",
+      "path": "pages/article/index",
       "style": {
-        "navigationBarTitleText": "表单"
+        "navigationBarTitleText": "查看文章"
+      }
+    },
+    {
+      "path": "pages/editor/index",
+      "style": {
+        "navigationBarTitleText": "编辑器"
       }
     },
     {
@@ -27,6 +33,7 @@
         "navigationBarTitleText": "添加图片"
       }
     },
+
     {
       "path": "pages/addVideoPage/index",
       "style": {
@@ -45,8 +52,14 @@
         "selectedIconPath": "/static/tabBar/icon-home-selected.png"
       },
       {
-        "pagePath": "pages/form/index",
-        "text": "表单",
+        "pagePath": "pages/editor/index",
+        "text": "编辑器",
+        "iconPath": "/static/tabBar/icon-tabbar-mine.png",
+        "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
+      },
+      {
+        "pagePath": "pages/article/index",
+        "text": "富文本",
         "iconPath": "/static/tabBar/icon-tabbar-mine.png",
         "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
       }
