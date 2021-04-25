@@ -80,7 +80,6 @@ module.exports = {
         properties: 'never',
       }
     ],
-    'func-names': ['error', 'as-needed'],
     'comma-dangle': [
       'error',
       {
