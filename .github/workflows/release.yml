@@ -16,7 +16,7 @@ jobs:
             npm install && npm run build:mp-weixin
 
       - name: mini-program CI
-        uses: actions/mini-program@main
+        uses: actions/actions.mini-program@main
         with:
           project_type: miniProgram
           action_type: preview
