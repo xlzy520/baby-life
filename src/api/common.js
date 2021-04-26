@@ -1,6 +1,6 @@
 // import _request from '@/utils/request'
-
-const db = wx.cloud.database()
+wx.cloud.init()
+export const db = wx.cloud.database()
 
 const errorMessageError = {
   '-502005': '数据库或数据表不存在',
@@ -13,11 +13,15 @@ export const dbRequest = (collectionName, actions = []) => new Promise(((resolve
   }
   for (let i = 0; i < actions.length; i++) {
     const item = actions[i]
-    const { method, condition } = item
-    if (!condition) {
+    const { method, params } = item
+    if (!params) {
       baseService = baseService[method]()
     } else {
-      baseService = baseService[method](condition)
+      if (method === 'orderBy') {
+        baseService = baseService[method](...params)
+      } else {
+        baseService = baseService[method](params)
+      }
     }
   }
   baseService.then(res => {
