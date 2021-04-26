@@ -1,86 +1,80 @@
 <template>
-  <view class="container">
-    <view class="page-body">
-      <view class='wrapper'>
-        <view class='toolbar' @tap="format" style="height: 120px;overflow-y: auto;">
-          <view :class="formats.bold ? 'ql-active' : ''" class="iconfont icon-zitijiacu" data-name="bold"></view>
-          <view :class="formats.italic ? 'ql-active' : ''" class="iconfont icon-zitixieti" data-name="italic"></view>
-          <view :class="formats.underline ? 'ql-active' : ''" class="iconfont icon-zitixiahuaxian" data-name="underline"></view>
-          <view :class="formats.strike ? 'ql-active' : ''" class="iconfont icon-zitishanchuxian" data-name="strike"></view>
-          <view :class="formats.align === 'left' ? 'ql-active' : ''" class="iconfont icon-zuoduiqi" data-name="align"
-                data-value="left"></view>
-          <view :class="formats.align === 'center' ? 'ql-active' : ''" class="iconfont icon-juzhongduiqi" data-name="align"
-                data-value="center"></view>
-          <view :class="formats.align === 'right' ? 'ql-active' : ''" class="iconfont icon-youduiqi" data-name="align"
-                data-value="right"></view>
-          <view :class="formats.align === 'justify' ? 'ql-active' : ''" class="iconfont icon-zuoyouduiqi" data-name="align"
-                data-value="justify"></view>
-          <view :class="formats.lineHeight ? 'ql-active' : ''" class="iconfont icon-line-height" data-name="lineHeight"
-                data-value="2"></view>
-          <view :class="formats.letterSpacing ? 'ql-active' : ''" class="iconfont icon-Character-Spacing" data-name="letterSpacing"
-                data-value="2em"></view>
-          <view :class="formats.marginTop ? 'ql-active' : ''" class="iconfont icon-722bianjiqi_duanqianju" data-name="marginTop"
-                data-value="20px"></view>
-          <view :class="formats.previewarginBottom ? 'ql-active' : ''" class="iconfont icon-723bianjiqi_duanhouju" data-name="marginBottom"
-                data-value="20px"></view>
-          <view class="iconfont icon-clearedformat" @tap="removeFormat"></view>
-          <view :class="formats.fontFamily ? 'ql-active' : ''" class="iconfont icon-font" data-name="fontFamily" data-value="Pacifico"></view>
-          <view :class="formats.fontSize === '24px' ? 'ql-active' : ''" class="iconfont icon-fontsize" data-name="fontSize"
-                data-value="24px"></view>
-
-          <view :class="formats.color === '#0000ff' ? 'ql-active' : ''" class="iconfont icon-text_color" data-name="color"
-                data-value="#0000ff"></view>
-          <view :class="formats.backgroundColor === '#00ff00' ? 'ql-active' : ''" class="iconfont icon-fontbgcolor"
-                data-name="backgroundColor" data-value="#00ff00"></view>
-
-          <view class="iconfont icon-date" @tap="insertDate"></view>
-          <view class="iconfont icon--checklist" data-name="list" data-value="check"></view>
-          <view :class="formats.list === 'ordered' ? 'ql-active' : ''" class="iconfont icon-youxupailie" data-name="list"
-                data-value="ordered"></view>
-          <view :class="formats.list === 'bullet' ? 'ql-active' : ''" class="iconfont icon-wuxupailie" data-name="list"
-                data-value="bullet"></view>
-          <view class="iconfont icon-undo" @tap="undo"></view>
-          <view class="iconfont icon-redo" @tap="redo"></view>
-
-          <view class="iconfont icon-outdent" data-name="indent" data-value="-1"></view>
-          <view class="iconfont icon-indent" data-name="indent" data-value="+1"></view>
-          <view class="iconfont icon-fengexian" @tap="insertDivider"></view>
-          <view class="iconfont icon-charutupian" @tap="insertImage"></view>
-          <view :class="formats.header === 1 ? 'ql-active' : ''" class="iconfont icon-format-header-1" data-name="header"
-                :data-value="1"></view>
-          <view :class="formats.script === 'sub' ? 'ql-active' : ''" class="iconfont icon-zitixiabiao" data-name="script"
-                data-value="sub"></view>
-          <view :class="formats.script === 'super' ? 'ql-active' : ''" class="iconfont icon-zitishangbiao" data-name="script"
-                data-value="super"></view>
-          <view class="iconfont icon-shanchu" @tap="clear"></view>
-          <view :class="formats.direction === 'rtl' ? 'ql-active' : ''" class="iconfont icon-direction-rtl" data-name="direction"
-                data-value="rtl"></view>
-
-        </view>
-        <button @click="release">发布</button>
-
-
-        <view class="editor-wrapper">
-          <editor id="editor" class="ql-container" placeholder="开始输入..." showImgSize showImgToolbar showImgResize
-                  @statuschange="onStatusChange" :read-only="readOnly" @ready="onEditorReady">
-          </editor>
-        </view>
-      </view>
+  <view class="content">
+    <view class="container" :style="{height: editorHeight+'px'}">
+      <editor id="editor" class="ql-container" :placeholder="placeholder"
+              @statuschange="onStatusChange" @ready="onEditorReady">
+      </editor>
     </view>
 
+    <view class="toolbar" catchtouchend="format" :style="{bottom: isIOS ? keyboardHeight+'px' : 0}">
+      <i class="iconfont icon-charutupian" @click="insertImage"></i>
+      <i class="iconfont icon-format-header-2"
+         :class="{'ql-active': formats.header === 2}"
+         @click="format('header', 2)"></i>
+      <i class="iconfont icon-format-header-3"
+         :class="{'ql-active': formats.header === 3}"
+         @click="format('header', 3)"></i>
+      <i class="iconfont icon-zitijiacu"
+         :class="{'ql-active': formats.bold}"
+         @click="format('bold')"></i>
+      <i class="iconfont icon-zitixieti"
+         :class="{'ql-active': formats.italic}"
+         @click="format('italic')"></i>
+      <i class="iconfont icon-zitixiahuaxian"
+         :class="{'ql-active': formats.underline}"
+         @click="format('underline')"></i>
+      <i class="iconfont icon--checklist" @click="format('list', 'check')"></i>
+      <i class="iconfont icon-youxupailie"
+         :class="{'ql-active': formats.list === 'ordered'}"
+         @click="format('list', 'ordered')"></i>
+      <i class="iconfont icon-wuxupailie"
+         :class="{'ql-active': formats.list === 'bullet'}"
+         @click="format('list', 'bullet')"></i>
+    </view>
+    <button @click="release">发布</button>
   </view>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      readOnly: true,
       formats: {},
+      readOnly: false,
+      placeholder: '开始输入...',
+      editorHeight: 300,
+      keyboardHeight: 0,
+      isIOS: false,
       html: '<h1>lzy</h1>'
     }
   },
+  components: {
+  },
+  onLoad() {
+    const platform = wx.getSystemInfoSync().platform
+    const isIOS = platform === 'ios'
+    this.isIOS = isIOS
+    const that = this
+    this.updatePosition(0)
+    let keyboardHeight = 0
+    wx.onKeyboardHeightChange(res => {
+      if (res.height === keyboardHeight) return
+      const duration = res.height > 0 ? res.duration * 1000 : 0
+      keyboardHeight = res.height
+      setTimeout(() => {
+        wx.pageScrollTo({
+          scrollTop: 0,
+          success() {
+            that.updatePosition(keyboardHeight)
+            that.editorCtx.scrollIntoView()
+          },
+        })
+      }, duration)
+    })
+  },
   methods: {
+    // 点击发布
     release() {
       this.showSettingLayer = false;
       this.editorCtx.getContents({
@@ -90,47 +84,57 @@ export default {
       })
     },
     readOnlyChange() {
-      this.readOnly = !this.readOnly
+      this.readOnly = !this.data.readOnly
+    },
+    updatePosition(keyboardHeight) {
+      const toolbarHeight = 50
+      const { windowHeight, platform } = wx.getSystemInfoSync()
+      const editorHeight = keyboardHeight > 0 ? (windowHeight - keyboardHeight - toolbarHeight) : windowHeight
+      this.editorHeight = editorHeight
+      this.keyboardHeight = keyboardHeight
+    },
+    calNavigationBarAndStatusBar() {
+      const systemInfo = wx.getSystemInfoSync()
+      const { statusBarHeight, platform } = systemInfo
+      const isIOS = platform === 'ios'
+      const navigationBarHeight = isIOS ? 44 : 48
+      return statusBarHeight + navigationBarHeight
     },
     onEditorReady() {
-      uni.createSelectorQuery().select('#editor').context((res) => {
+      wx.createSelectorQuery().select('#editor').context((res)=> {
         this.editorCtx = res.context
         this.editorCtx.setContents({
           html: this.html
         })
       }).exec()
     },
-    undo() {
-      this.editorCtx.undo()
+    blur() {
+      this.editorCtx.blur()
     },
-    redo() {
-      this.editorCtx.redo()
-    },
-    format(e) {
-      let {
-        name,
-        value
-      } = e.target.dataset
+    format(name, value) {
+      // console.log(e)
+      // const { name, value } = e.target.dataset
       if (!name) return
       // console.log('format', name, value)
       this.editorCtx.format(name, value)
     },
     onStatusChange(e) {
       const formats = e.detail
+      console.log(e)
       this.formats = formats
     },
     insertDivider() {
       this.editorCtx.insertDivider({
-        success: function() {
+        success() {
           console.log('insert divider success')
-        }
+        },
       })
     },
     clear() {
       this.editorCtx.clear({
-        success: function(res) {
-          console.log("clear success")
-        }
+        success(res) {
+          console.log('clear success')
+        },
       })
     },
     removeFormat() {
@@ -140,69 +144,79 @@ export default {
       const date = new Date()
       const formatDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
       this.editorCtx.insertText({
-        text: formatDate
+        text: formatDate,
       })
     },
     insertImage() {
-      uni.chooseImage({
+      const that = this
+      wx.chooseImage({
         count: 1,
-        success: (res) => {
-          this.editorCtx.insertImage({
+        success(res) {
+          that.editorCtx.insertImage({
             src: res.tempFilePaths[0],
-            alt: '图像',
-            success: function() {
+            data: {
+              id: 'abcd',
+              role: 'god',
+            },
+            width: '80%',
+            success() {
               console.log('insert image success')
-            }
+            },
           })
-        }
+        },
       })
-    }
-  },
-  onLoad() {
-    uni.loadFontFace({
-      family: 'Pacifico',
-      source: 'url("https://sungd.github.io/Pacifico.ttf")'
-    })
+    },
   },
 }
 </script>
 
-<style>
-@import "./editor-icon.scss";
-.page-body {
-  height: calc(100vh - var(--window-top) - var(--status-bar-height));
+<style lang="scss">
+@import "./iconfont.scss";
+
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
-.wrapper {
+
+.ql-container {
+  box-sizing: border-box;
+  width: 100%;
   height: 100%;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow: auto;
+  padding: 10px 10px 20px 10px;
+  border: 1px solid #ECECEC;
 }
-.editor-wrapper {
-  height: calc(100vh - var(--window-top) - var(--status-bar-height) - 140px);
-  background: #fff;
+
+.ql-active {
+  color: #22C704;
 }
+
 .iconfont {
   display: inline-block;
-  padding: 8px 8px;
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   font-size: 20px;
 }
+
 .toolbar {
   box-sizing: border-box;
-  border-bottom: 0;
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-}
-.ql-container {
-  box-sizing: border-box;
-  padding: 12px 15px;
+  padding: 0 10px;
+  height: 50px;
   width: 100%;
-  min-height: 30vh;
-  height: 100%;
-  margin-top: 20px;
-  font-size: 16px;
-  line-height: 1.5;
-}
-.ql-active {
-  color: #06c;
+  position: fixed;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ECECEC;
+  border-left: none;
+  border-right: none;
 }
 </style>
