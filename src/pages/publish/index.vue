@@ -5,17 +5,17 @@
              @add="onAlbumAdd" @delete="onAlbumDelete">
       <template v-slot:before>
         <view class="px-3 pt-2">
-          <u-input v-model="text" type="textarea" :focus="false" :maxlength="927"
+          <u-input v-model="content" type="textarea" :focus="false" :maxlength="927"
                    class="moment-think" height="50" :auto-height="false" placeholder="这一刻的想法..." />
         </view>
       </template>
       <template v-slot:after>
         <view class="px-2 pb-2">
           <u-cell-group>
-            <u-cell-item title="所在位置" icon="map" :arrow="true" :borderGap="false">
-            </u-cell-item>
+            <u-cell-item title="所在位置" :value="location" icon="map" />
           </u-cell-group>
-          <u-button type="success" @click="publish" ripple>发表</u-button>
+          <u-button type="success" open-type="getUserProfile" @click="prePublish" ripple
+                    :loading="loading">发表</u-button>
         </view>
       </template>
     </r-album>
@@ -25,6 +25,9 @@
 <script>
 import RAlbum from '@/components/r-album'
 import { ImgList } from '@/utils/enum'
+import { dbRequest } from '@/api/common'
+
+const app = getApp()
 
 export default {
   components: {
@@ -34,16 +37,91 @@ export default {
     return {
       // id是DB主键，如果id重复会造成在拖拽排序时候，会影响相同ID的元素
       list: [],
-      commentSwitch: true,
-      text: '',
+      content: '',
+      location: '深圳市',
+      loading: false,
+      userInfo: null,
+      openid: '',
     }
   },
   onLoad() {
-
+    this.openid = uni.getStorageSync('openid')
+    this.userInfo = uni.getStorageSync('userInfo')
   },
   methods: {
-    publish() {
+    queryOpenid(openid) {
+      const actions = [
+        {
+          method: 'where',
+          params: {
+            openid,
+          },
+        }, { method: 'get' }
+      ]
+      return dbRequest('user', actions)
     },
+    addUser(openid, userInfo) {
+      const actions = [
+        {
+          method: 'add',
+          params: {
+            data: {
+              openid,
+              userInfo,
+            },
+          },
+        }
+      ]
+      dbRequest('user', actions).then(res => {
+        console.log(res)
+      })
+    },
+    prePublish() {
+      if (this.userInfo) {
+        this.publish()
+        return
+      }
+      wx.getUserProfile({
+        desc: '完善用户信息',
+        success: res => {
+          const userInfo = res.userInfo
+          const openid = this.openid
+          uni.setStorageSync('userInfo', userInfo)
+          this.userInfo = userInfo
+          this.queryOpenid(openid).then(res => {
+            if (!res.data.length) {
+              this.addUser(openid, userInfo)
+            }
+            this.publish()
+          })
+        },
+      })
+    },
+    publish() {
+      const actions = [
+        {
+          method: 'add',
+          params: {
+            data: {
+              openid: this.openid,
+              content: this.content,
+              location: this.location,
+              publishTime: Date.now(),
+              imgList: this.$refs.rAlbum.list.filter(v => v.cloudPath),
+              name: this.userInfo.nickName,
+              avatar: this.userInfo.avatarUrl,
+            },
+          },
+        }
+      ]
+      dbRequest('blog', actions).then(res => {
+        uni.reLaunch({ url: '/pages/index/index?refresh=1' })
+      })
+    },
+    // publish(e) {
+    //   this.getUserProfile()
+    //   // this.loading = true
+    // },
     onAlbumSort(list) {
       // 返回排序后的数组集合
       // 更新后台排序号
@@ -60,9 +138,10 @@ export default {
       console.log(res)
       this.$refs.rAlbum.add({
         // id必须不能重复！！！！
-        id: Math.floor(Math.random() * 1000 + 1),
+        id: res.cloudPath,
         sortID: res.sortID,
         src: res.src,
+        ...res,
       })
     },
     onAlbumDelete(data) {
