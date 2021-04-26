@@ -1,0 +1,25 @@
+name: actions.mini-program
+on: push
+jobs:
+  start:
+    name: Start
+    runs-on: ubuntu-latest
+    steps:
+      - name: "build and zip"    # 先build，然后压缩dist为压缩包
+      - uses: actions/checkout@v2
+        run: |
+          npm install && npm run build:mp-weixin
+
+      - name: actions.mini-program
+        uses: actions.mini-program@main
+        with:
+          project_type: miniProgram
+          action_type: preview
+          project_path: ./dist/build/mp-weixin
+          version: 1.0.0
+          command_options:
+            --enable-es6
+            --project-ignores=['node_modules/**/*']
+        env:
+          MINI_APP_ID: ${{ secrets.MINI_APP_ID }}
+          MINI_APP_PRIVATE_KEY: ${{ secrets.MINI_APP_PRIVATE_KEY }}
