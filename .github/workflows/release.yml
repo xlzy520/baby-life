@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "build and zip"    # 先build，然后压缩dist为压缩包
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         run: |
           npm install && npm run build:mp-weixin
 
