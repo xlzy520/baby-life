@@ -14,18 +14,19 @@
         </view>
         <view class="user__content-extra">
           <slot>
-<!--            <text :class="isFocusOn?'user__focus-on':'user__focus-off'"-->
-<!--                  @click.stop="clickFocus()">父亲</text>-->
+            <text :class="isFocusOn?'user__focus-on':'user__focus-off'">{{location}}</text>
           </slot>
         </view>
       </view>
     </view>
 
-    <view class="text">{{content}}</view>
+    <view class="text break-words">{{content}}</view>
     <view class="allImage">
       <view class="imgList">
         <view class="images" v-for="(item,index) in imgList" :key="index">
-          <image @click.stop="previewImg()" class="oneimg" :src="item" mode="aspectFill"
+          <video class="oneimg" v-if="item.fileType === 'video'" :src="item.cloudPath"
+                 :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></video>
+          <image v-else @click.stop="previewImg(index)" class="oneimg" :src="item.cloudPath" mode="aspectFill"
                  :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></image>
         </view>
       </view>
@@ -63,6 +64,9 @@ export default {
       type: String,
     },
     name: {
+      type: String,
+    },
+    location: {
       type: String,
     },
     publishTime: {
@@ -129,9 +133,12 @@ export default {
   },
   methods: {
     // 预览图片
-    previewImg() {
+    previewImg(current) {
+      console.log(current)
       uni.previewImage({
-        urls: this.imgList,
+        count: this.imgList[current].cloudPath,
+        current,
+        urls: this.imgList.map(v=> v.cloudPath),
         longPressActions: {
           itemList: ['保存图片'],
 
@@ -146,22 +153,23 @@ export default {
     judgeImg() {
       if (this.imgList.length === 1) {
         this.imgWidth = this.windowWidth - 30
-        this.imgHeight = this.windowHeight * (3 / 5)
+        this.imgHeight = this.windowHeight * (3 / 5).toFixed(0)
       } else {
         const width = this.windowWidth / 3.4
-        this.imgWidth = width
-        this.imgHeight = width
+        this.imgWidth = width.toFixed(0)
+        this.imgHeight = width.toFixed(0)
       }
     },
     timestampFormat(timestamp) {
+      console.log(timestamp)
       if (!timestamp) return ''
       function zeroize(num) {
         return (String(num).length === 1 ? '0' : '') + num
       }
 
-      const curTimestamp = parseInt(new Date().getTime() / 1000) // 当前时间戳
+      const curTimestamp = Date.now() // 当前时间戳
       const timestampDiff = curTimestamp - timestamp // 参数时间戳与当前时间戳相差秒数
-
+      console.log(curTimestamp, timestampDiff)
       const curDate = new Date(curTimestamp * 1000) // 当前时间日期对象
       const tmDate = new Date(timestamp * 1000) // 参数时间戳转换成的日期对象
 
@@ -172,15 +180,15 @@ export default {
       const i = tmDate.getMinutes()
       const s = tmDate.getSeconds()
 
-      if (timestampDiff < 60) { // 一分钟以内
+      if (timestampDiff < 60000) { // 一分钟以内
         return '刚刚'
-      } else if (timestampDiff < 3600) { // 一小时前之内
-        return Math.floor(timestampDiff / 60) + '分钟前'
+      } else if (timestampDiff < 3600000) { // 一小时前之内
+        return Math.floor(timestampDiff / 60000) + '分钟前'
       } else if (curDate.getFullYear() === Y && curDate.getMonth() + 1 === m &&
           curDate.getDate() === d) {
         return '今天' + zeroize(H) + ':' + zeroize(i)
       } else {
-        const newDate = new Date((curTimestamp - 86400) * 1000) // 参数中的时间戳加一天转换成的日期对象
+        const newDate = new Date((curTimestamp - 86400) * 1000 * 1000) // 参数中的时间戳加一天转换成的日期对象
         if (newDate.getFullYear() === Y && newDate.getMonth() + 1 === m &&
             newDate.getDate() === d) {
           return '昨天' + zeroize(H) + ':' + zeroize(i)
