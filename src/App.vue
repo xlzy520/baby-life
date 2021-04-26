@@ -1,10 +1,14 @@
 <script>
 import setting from '@/setting'
+import { dbRequest } from '@/api/common'
+
+const app = getApp()
 
 export default {
   onLaunch() {
     this.getUpdateManager()
     this.iniCloud()
+    this.getOpenid()
     this.globalData = {}
   },
   onShow() {
@@ -12,6 +16,20 @@ export default {
   onHide() {
   },
   methods: {
+    getOpenid() {
+      // 调用云函数
+      const openid = uni.getStorageSync('openid')
+      if (openid) {
+        return
+      }
+      wx.cloud.callFunction({
+        name: 'login',
+        data: {},
+        success: res => {
+          uni.setStorageSync('openid', res.result.openid)
+        },
+      })
+    },
     getUpdateManager() {
       if (uni.canIUse('getUpdateManager')) {
         const updateManager = uni.getUpdateManager()

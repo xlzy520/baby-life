@@ -10,6 +10,13 @@
       }
     },
     {
+      "path": "pages/publish/index",
+      "style": {
+        "navigationBarTitleText": "执笔"
+      }
+    },
+
+    {
       "path": "pages/article/index",
       "style": {
         "navigationBarTitleText": "查看文章"
@@ -28,16 +35,9 @@
       }
     },
     {
-      "path": "pages/addPhotoPage/index",
+      "path": "pages/album/index",
       "style": {
-        "navigationBarTitleText": "添加图片"
-      }
-    },
-
-    {
-      "path": "pages/addVideoPage/index",
-      "style": {
-        "navigationBarTitleText": "添加视频"
+        "navigationBarTitleText": "相册"
       }
     }
   ],
@@ -52,14 +52,14 @@
         "selectedIconPath": "/static/tabBar/icon-home-selected.png"
       },
       {
-        "pagePath": "pages/editor/index",
-        "text": "编辑器",
+        "pagePath": "pages/publish/index",
+        "text": "执笔",
         "iconPath": "/static/tabBar/icon-tabbar-mine.png",
         "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
       },
       {
-        "pagePath": "pages/article/index",
-        "text": "富文本",
+        "pagePath": "pages/album/index",
+        "text": "相册",
         "iconPath": "/static/tabBar/icon-tabbar-mine.png",
         "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
       }
