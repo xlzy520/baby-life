@@ -15,9 +15,10 @@
                     }"
                     :style="{ 'width':item.width+'px', 'height':item.height+'px' }">
 				<view v-if="!item.isAdd" class="dragsort-view-item" @click.stop="onClick(item,index,list)">
-					<u-image width="100%" height="100%" :src="fixResourcesUrl(item.src)"
+          <video class="preview-video" v-if="item.fileType === 'video'" :src="item.src"></video>
+          <u-image v-else width="100%" height="100%" :src="fixResourcesUrl(item.src)"
                    @click="previewImg"></u-image>
-				</view>
+        </view>
 				<view v-if="item.isAdd" class="dragsort-view-item" @click.stop="onAdd">
 					<view class="btnAdd">
 						<u-icon class="btnAdd-icon" name="plus" color="#B2B2B2" size="90"></u-icon>
@@ -36,6 +37,8 @@
 </template>
 
 <script>
+import { dbRequest } from '@/api/common'
+
 let timeOut = 0
 const debounceWait = 300
 let touchTimeOut = 0
@@ -43,6 +46,7 @@ const touchDebounceWait = 300
 let touchMoveTimeOut = 0
 const touchMoveDebounceWait = 10
 let lastTouchE = null
+
 export default {
   name: 'drag-sort',
   mixins: [],
@@ -316,21 +320,23 @@ export default {
       // 其实需要改变x.y偏移和排序号的始终是拖拽元素和目标元素之间的元素
       if (this.activeModel.sortID > targetSortID) {
         // 从大到小,需要判断是同行移动，还是跨行移动
-        if (this.activeModel.rowNumber == rowNumber) {
+        if (this.activeModel.rowNumber === rowNumber) {
           // 单行只需要改变x偏移，从后往前以此修改之间元素偏移
-          for (var sortid = this.activeModel.sortID - 1; sortid >= targetSortID; sortid--) {
-            var model = this.getModelBySortID(sortid)
+          let sortid = this.activeModel.sortID - 1
+          for (; sortid >= targetSortID; sortid--) {
+            const model = this.getModelBySortID(sortid)
             model.x += (this.width + this.viewGap)
             model.sortID++
             model.columnNumber++
           }
         } else {
           // 如果激活元素和目标元素不在一行
-          for (var sortid = this.activeModel.sortID - 1; sortid >= targetSortID; sortid--) {
-            var model = this.getModelBySortID(sortid)
+          let sortid = this.activeModel.sortID - 1
+          for (; sortid >= targetSortID; sortid--) {
+            const model = this.getModelBySortID(sortid)
             model.sortID++
             // 此时由于不在同一行，需要改变的元素可能存在需要换行的情况，需要分别处理
-            if (model.columnNumber == this.column) {
+            if (model.columnNumber === this.column) {
               // 如果当前元素处于最后一列，那么需要换行
               model.columnNumber = 1
               model.rowNumber++
@@ -345,21 +351,23 @@ export default {
         }
       } else if (this.activeModel.sortID < targetSortID) {
         // 从小到大，需要判断是同行移动，还是跨行移动
-        if (this.activeModel.rowNumber == rowNumber) {
+        if (this.activeModel.rowNumber === rowNumber) {
           // 单行只需要改变x偏移，从前往后以此修改之间元素偏移
-          for (var sortid = this.activeModel.sortID + 1; sortid <= targetSortID; sortid++) {
-            var model = this.getModelBySortID(sortid)
+          let sortid = this.activeModel.sortID + 1
+          for (; sortid <= targetSortID; sortid++) {
+            const model = this.getModelBySortID(sortid)
             model.x -= (this.width + this.viewGap)
             model.sortID--
             model.columnNumber--
           }
         } else {
           // 如果激活元素和目标元素不在一行
-          for (var sortid = this.activeModel.sortID + 1; sortid <= targetSortID; sortid++) {
-            var model = this.getModelBySortID(sortid)
+          let sortid = this.activeModel.sortID + 1
+          for (; sortid <= targetSortID; sortid++) {
+            const model = this.getModelBySortID(sortid)
             model.sortID--
             // 此时由于不在同一行，需要改变的元素可能存在需要换行的情况，需要分别处理
-            if (model.columnNumber == 1) {
+            if (model.columnNumber === 1) {
               // 如果当前元素处于第一列，那么需要减一行
               model.columnNumber = this.column
               model.rowNumber--
@@ -488,7 +496,7 @@ export default {
           me.topX = res[0].left
 
           // 记录当前拖拽元素
-          me.activeModel = me.getModel(Number(e.currentTarget.dataset.id))
+          me.activeModel = me.getModel(e.currentTarget.dataset.id)
           me.activeModel.width += 10
           me.activeModel.height += 10
           me.activeX = me.activeModel.x
@@ -648,23 +656,61 @@ export default {
     },
     onAdd() {
       const self = this
-      uni.chooseImage({
+      uni.chooseMedia({
         count: 9 - self.modelCount, // 默认9
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: (res) => {
-          if (res.tempFilePaths) {
-            res.tempFilePaths.map((item, index) => {
+          console.log(res)
+          if (res.tempFiles) {
+            res.tempFiles.map((item, index) => {
               // 延迟触发一下
-              setTimeout(function () {
+              setTimeout(() => {
+                uni.showLoading({ title: '上传中...' })
                 self.maxSortID++
-                const src = item
-                self.$emit('add', { src, sortID: self.maxSortID })
+                const src = item.tempFilePath
+                const filePath = item.tempFilePath
+                // 上传图片
+                const cloudPath = Date.now().toString()+ filePath.match(/\.[^.]+?$/)[0]
+                wx.cloud.uploadFile({
+                  cloudPath,
+                  filePath,
+                  success: res => {
+                    console.log('[上传文件] 成功：', res)
+                    if (item.fileType === 'video') {
+                      delete item.thumbTempFilePath
+                    }
+                    delete item.tempFilePath
+                    this.saveToDB({
+                      cloudPath: res.fileID,
+                      ...item,
+                    })
+                    self.$emit('add', {
+                      ...item, src, cloudPath: res.fileID, sortID: self.maxSortID,
+                    })
+                  },
+                  fail: e => {
+                    console.error('[上传文件] 失败：', e)
+                    wx.showToast({
+                      icon: 'none',
+                      title: '上传失败',
+                    })
+                  },
+                  complete: () => {
+                    wx.hideLoading()
+                  },
+                })
               }, 200)
             })
           }
         },
       })
+    },
+    saveToDB(data) {
+      const actions = [
+        { method: 'add', params: { data } }
+      ]
+      dbRequest('album', actions)
     },
     // 供外部调用，新增一个元素
     add(item) {
