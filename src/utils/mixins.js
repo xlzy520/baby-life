@@ -1,45 +1,52 @@
 export const getList = {
   data() {
     return {
-      pageOption: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      total: 0,
-      totalPages: 0,
+      pageNum: 1,
+      pageSize: 20,
+      // total: 0,
+      // totalPages: 0,
       list: [],
+      status: 'loading',
+      noMore: false,
+      loadText: {
+        loadmore: '轻轻上拉',
+        loading: '努力加载中',
+        nomore: '实在没有了',
+      },
     }
   },
-  mounted() {
+  onLoad() {
     this.getList(true)
   },
   methods: {
     currentChange(val) {
-      this.pageOption.pageNum = val
+      this.pageNum = val
       this.getList(true)
     },
     handleResFromMixin(res, mapFn = v => v, isRefresh = false) {
-      const { list, total = 0, pageNum } = res
-      const transformedList = (list || []).map(mapFn)
+      const { data } = res
+      const transformedList = (data || []).map(mapFn)
       if (isRefresh) {
         this.list = transformedList
       } else {
         this.list = this.list.concat(transformedList)
       }
-      this.total = total
-      this.pageOption.pageNum = pageNum
+      if (transformedList.length < this.pageSize) {
+        this.noMore = true
+        this.status = 'nomore'
+      }
     },
   },
   onPullDownRefresh() {
-    this.pageOption = {
-      pageNum: 1,
-      pageSize: 10,
-    }
+    this.pageNum = 1
+    this.noMore = false
+    this.status = ''
     this.getList(true)
   },
   onReachBottom() {
-    if (this.pageOption.pageNum < this.totalPages) {
-      this.pageOption.pageNum++
+    if (!this.noMore) {
+      this.status = 'loading';
+      this.pageNum++
       this.getList()
     }
   },

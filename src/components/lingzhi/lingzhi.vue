@@ -26,33 +26,12 @@
         <view class="images" v-for="(item,index) in imgList" :key="index">
           <video class="oneimg" v-if="item.fileType === 'video'" :src="item.cloudPath"
                  :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></video>
-          <image v-else @click.stop="previewImg(index)" class="oneimg" :src="item.cloudPath" mode="aspectFill"
+          <image v-else @click.stop="previewImg(index)" class="oneimg" :src="item.cloudPath"
+                 mode="aspectFill" lazy-load
                  :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></image>
         </view>
       </view>
     </view>
-<!--    <view class="operate" v-if="false" :style="'width: 100%;display:'+operateDisplay">-->
-<!--      <uni-grid :column="3" :showBorder="false"  :square="false" >-->
-<!--        <uni-grid-item>-->
-<!--			        <span :style="'color:'+thumbsupColor" @click.stop="clickThumbsup()">-->
-<!--						<uni-icons type="hand-thumbsup-filled" size="18" :style="'margin-right: 2px;color:'+thumbsupColor"></uni-icons>-->
-<!--						{{likeNumber?likeNumber:'点赞'}}-->
-<!--					</span>-->
-<!--        </uni-grid-item>-->
-<!--        <uni-grid-item>-->
-<!--			        <span :style="'color:'+heartColor"  @click.stop="clickGiveReward()">-->
-<!--						<uni-icons type="star-filled" size="18" :style="'margin-right: 2px;color:'+heartColor"></uni-icons>-->
-<!--						{{giveRewardNumber?giveRewardNumber:'打赏'}}-->
-<!--					</span>-->
-<!--        </uni-grid-item>-->
-<!--        <uni-grid-item>-->
-<!--					<span  style="color:gray"   @click.stop="clickChat()">-->
-<!--						<uni-icons type="chat" size="18" style="margin-right: 2px;color:gray"></uni-icons>-->
-<!--						{{chatNumber?chatNumber:'评论'}}-->
-<!--					</span>-->
-<!--        </uni-grid-item>-->
-<!--      </uni-grid>-->
-<!--    </view>-->
     <divider />
   </view>
 </template>
@@ -81,27 +60,6 @@ export default {
     imgList: {
       type: Array,
     },
-    isLike: {
-      type: Boolean,
-    },
-    isGiveReward: {
-      type: Boolean,
-    },
-    likeNumber: {
-      type: Number,
-    },
-    giveRewardNumber: {
-      type: Number,
-    },
-    chatNumber: {
-      type: Number,
-    },
-    userNoShow: {
-      type: Boolean,
-    },
-    operateNoShow: {
-      type: Boolean,
-    },
   },
   data() {
     return {
@@ -109,10 +67,6 @@ export default {
       windowHeight: 0,	// 屏幕可用高度
       imgWidth: 0,	// 图片宽度
       imgHeight: 0,	// 图片高度
-      thumbsupColor: 'gray',
-      heartColor: 'gray',
-      userDisplay: 'block',
-      operateDisplay: 'block',
     }
   },
   mounted() {
@@ -120,34 +74,20 @@ export default {
     this.windowHeight = res.windowHeight
     this.windowWidth = res.windowWidth
 
-    if (this.userNoShow) {
-      this.userDisplay = 'none'
-    }
-    console.log(this.operateNoShow)
-    if (this.operateNoShow) {
-      this.operateDisplay = 'none'
-    }
-
     this.judgeImg()
-    this.initOperate()
   },
   methods: {
     // 预览图片
     previewImg(current) {
-      console.log(current)
       uni.previewImage({
         count: this.imgList[current].cloudPath,
         current,
-        urls: this.imgList.map(v=> v.cloudPath),
+        urls: this.imgList.map(v => v.cloudPath),
         longPressActions: {
           itemList: ['保存图片'],
 
         },
       })
-    },
-    initOperate() {
-      if (this.isLike) this.thumbsupColor = '#fb5f5f'
-      if (this.isGiveReward) this.heartColor = '#fb5f5f'
     },
     // 自适应判断
     judgeImg() {
@@ -161,42 +101,21 @@ export default {
       }
     },
     timestampFormat(timestamp) {
-      console.log(timestamp)
       if (!timestamp) return ''
-      function zeroize(num) {
-        return (String(num).length === 1 ? '0' : '') + num
-      }
+      const time = this.$dayjs(timestamp)
+      const timestampDiff = Date.now() - timestamp // 参数时间戳与当前时间戳相差秒数
 
-      const curTimestamp = Date.now() // 当前时间戳
-      const timestampDiff = curTimestamp - timestamp // 参数时间戳与当前时间戳相差秒数
-      console.log(curTimestamp, timestampDiff)
-      const curDate = new Date(curTimestamp * 1000) // 当前时间日期对象
-      const tmDate = new Date(timestamp * 1000) // 参数时间戳转换成的日期对象
-
-      const Y = tmDate.getFullYear()
-      const m = tmDate.getMonth() + 1
-      const d = tmDate.getDate()
-      const H = tmDate.getHours()
-      const i = tmDate.getMinutes()
-      const s = tmDate.getSeconds()
-
-      if (timestampDiff < 60000) { // 一分钟以内
+      const ret = time.fromNow()
+      if (timestampDiff < 60 * 1000) { // 一分钟以内
         return '刚刚'
-      } else if (timestampDiff < 3600000) { // 一小时前之内
-        return Math.floor(timestampDiff / 60000) + '分钟前'
-      } else if (curDate.getFullYear() === Y && curDate.getMonth() + 1 === m &&
-          curDate.getDate() === d) {
-        return '今天' + zeroize(H) + ':' + zeroize(i)
+      } else if (timestampDiff < 3600 * 1000) { // 一小时前之内
+        return ret
+      } else if (time.isToday()) {
+        return `今天 ${time.format('HH:mm')}`
+      } else if (time.isYesterday()) {
+        return `昨天 ${time.format('HH:mm')}`
       } else {
-        const newDate = new Date((curTimestamp - 86400) * 1000 * 1000) // 参数中的时间戳加一天转换成的日期对象
-        if (newDate.getFullYear() === Y && newDate.getMonth() + 1 === m &&
-            newDate.getDate() === d) {
-          return '昨天' + zeroize(H) + ':' + zeroize(i)
-        } else if (curDate.getFullYear() === Y) {
-          return zeroize(m) + '月' + zeroize(d) + '日 ' + zeroize(H) + ':' + zeroize(i)
-        } else {
-          return Y + '年' + zeroize(m) + '月' + zeroize(d) + '日 ' + zeroize(H) + ':' + zeroize(i)
-        }
+        return time.format('YYYY年MM月DD日 HH时mm分ss秒')
       }
     },
 
@@ -350,9 +269,8 @@ export default {
   overflow: hidden;
 }
 .user__content-note{
-  margin-top: 3px;
   color: #999;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: normal;
   overflow: hidden;
 }
