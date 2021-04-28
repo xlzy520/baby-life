@@ -6,11 +6,15 @@
       <template v-slot:before>
         <view class="px-3 pt-2">
           <u-input v-model="content" type="textarea" :focus="false" :maxlength="927"
-                   class="moment-think" height="50" :auto-height="false" placeholder="这一刻的想法..." />
+                   class="moment-think" height="50" :auto-height="false"
+                   placeholder="这一刻的想法..." />
         </view>
       </template>
       <template v-slot:after>
         <view class="px-2 pb-2">
+          <u-cell-group>
+            <u-cell-item title="萧潇提示" value="可选择36张图片，一次最多9张" icon="star" :arrow="false" />
+          </u-cell-group>
           <u-cell-group>
             <u-cell-item title="所在位置" :value="location" icon="map" />
           </u-cell-group>

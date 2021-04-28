@@ -1,6 +1,6 @@
 <template>
-	<view class="dragsort-box">
-		<movable-area id="drag" class="dragsort-area">
+	<view class="w-full h-full overflow-hidden dragsort-box">
+		<movable-area id="drag" class="w-full dragsort-area">
 			<view id="dragsort-before" class="dragsort-before">
 				<slot name="before"></slot>
 			</view>
@@ -9,7 +9,7 @@
                     :data-id="item.id" :data-sortid="item.sortID" :data-isadd="item.isAdd"
                     @touchstart="touchstart" @touchmove.stop="touchmove" @touchend="touchend"
                     :direction="item.direction" damping="40" :animation="item.animation"
-                    :disabled="item.disabled" class="dragsort-view"
+                    :disabled="item.disabled" class="layout-items-center dragsort-view"
                     :class="{
                       'dragsort-view-active': isDrag&&activeModel&&activeModel.id === item.id
                     }"
@@ -20,7 +20,7 @@
                    @click="previewImg"></u-image>
         </view>
 				<view v-if="item.isAdd" class="dragsort-view-item" @click.stop="onAdd">
-					<view class="btnAdd">
+					<view class="layout-center w-full h-full btnAdd">
 						<u-icon class="btnAdd-icon" name="plus" color="#B2B2B2" size="90"></u-icon>
 					</view>
 				</view>
@@ -28,7 +28,7 @@
 			<view id="dragsort-after" class="dragsort-after">
 				<slot name="after"></slot>
 			</view>
-			<view id="dragsort-delete" class="dragsort-delete" :class="isDrag?'opacity':''">
+			<view id="dragsort-delete" class="w-full layout-col-around dragsort-delete" :class="isDrag?'opacity':''">
 				<u-icon class="deleteicon" name="trash" color="#FFFFFF" size="34"></u-icon>
 				<view>{{deleteText}}</view>
 			</view>
@@ -92,7 +92,7 @@ export default {
     // 元素最多数量
     maxCount: {
       type: Number,
-      default: () => 9,
+      default: () => 36,
     },
     // 容器左右内间隔【同padding】,单位px
     areaXGap: {
@@ -764,15 +764,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	/* 页面布局样式BEGIN */
 	.dragsort-box {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-	}
 
+	}
 	.dragsort-area {
-		width: 100%;
 		/*height: 100%;*/
     height: calc(100vh - 40rpx);
 	}
@@ -789,15 +784,10 @@ export default {
 		bottom: 0;
 		left: 0;
 		z-index: 100;
-		width: 100%;
 		/* padding: 14rpx 0; */
 		height: 90rpx;
 		background-color: #dd6161;
 		color: #FFFFFF;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-around;
 		opacity: 0;
 	}
 	.opacity{
@@ -810,12 +800,10 @@ export default {
 
 	.dragsort-view {
 		position: absolute !important;
-		display: flex;
-		align-items: center;
 		text-align: center;
-		 background-color: #C0C4CC;
+    background-color: #C0C4CC;
 		color: #fff;
-		 border-radius: 5px;
+    border-radius: 5px;
 		box-sizing: border-box;
 		z-index: 90;
 	}
@@ -835,12 +823,6 @@ export default {
 
 	.btnAdd{
 		background-color: #F7F7F7;
-		height: 100%;
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
 	}
 	.btnAdd-icon{
 		color: #B2B2B2;

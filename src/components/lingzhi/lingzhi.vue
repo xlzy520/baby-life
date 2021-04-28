@@ -279,13 +279,13 @@ export default {
   border: 1px solid #fb5f5f;
   color: #fb5f5f;
   display: flex;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 3px;
 }
 .user__focus-off{
   padding: 3px;
   color: gray;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 </style>

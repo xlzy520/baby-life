@@ -89,3 +89,11 @@
   justify-content: center;
   align-items: center;
 }
+
+/*纵向左右垂直环绕*/
+.layout-col-around {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
