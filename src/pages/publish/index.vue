@@ -27,8 +27,6 @@ import RAlbum from '@/components/r-album'
 import { ImgList } from '@/utils/enum'
 import { dbRequest } from '@/api/common'
 
-const app = getApp()
-
 export default {
   components: {
     RAlbum,
@@ -98,6 +96,19 @@ export default {
       })
     },
     publish() {
+      const imgList = []
+      if (this.$refs.rAlbum.list) {
+        this.$refs.rAlbum.list.forEach(media => {
+          if (media.cloudPath) {
+            const {
+              cloudPath, fileType, height, id, size, sortID, width,
+            } = media
+            imgList.push({
+              cloudPath, fileType, height, id, size, sortID, width,
+            })
+          }
+        })
+      }
       const actions = [
         {
           method: 'add',
@@ -107,7 +118,7 @@ export default {
               content: this.content,
               location: this.location,
               publishTime: Date.now(),
-              imgList: this.$refs.rAlbum.list.filter(v => v.cloudPath),
+              imgList,
               name: this.userInfo.nickName,
               avatar: this.userInfo.avatarUrl,
             },
@@ -118,10 +129,6 @@ export default {
         uni.reLaunch({ url: '/pages/index/index?refresh=1' })
       })
     },
-    // publish(e) {
-    //   this.getUserProfile()
-    //   // this.loading = true
-    // },
     onAlbumSort(list) {
       // 返回排序后的数组集合
       // 更新后台排序号
@@ -137,7 +144,6 @@ export default {
       console.info('新增成功')
       console.log(res)
       this.$refs.rAlbum.add({
-        // id必须不能重复！！！！
         id: res.cloudPath,
         sortID: res.sortID,
         src: res.src,

@@ -724,8 +724,8 @@ export default {
 
       // 有新增按钮情况下，包括新增按钮，元素长度是否为maxCount
       // 是的话，新增按钮需要移除
-      if (this.list.length == this.maxCount) {
-        var model = { ...item, ...this.addObject }
+      if (this.list.length === this.maxCount) {
+        const model = { ...item, ...this.addObject }
         model.isAdd = false
         model.disabled = false
         model.src = item.src
@@ -735,7 +735,7 @@ export default {
         this.list.splice(this.maxCount - 1, 1, model)
         this.addObject = null
       } else {
-        var model = { ...item, ...this.addObject }
+        const model = { ...item, ...this.addObject }
         model.isAdd = false
         model.disabled = false
         model.src = item.src
@@ -744,7 +744,7 @@ export default {
 
         this.list.splice(this.list.length - 1, 0, model)
         // 新增按钮可能存在需要换行的情况，需要分别处理
-        if (this.addObject.columnNumber == this.column) {
+        if (this.addObject.columnNumber === this.column) {
           // 如果处于最后一列，那么需要换行
           this.addObject.columnNumber = 1
           this.addObject.rowNumber++
@@ -763,7 +763,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	/* 页面布局样式BEGIN */
 	.dragsort-box {
 		width: 100%;
@@ -773,10 +773,9 @@ export default {
 
 	.dragsort-area {
 		width: 100%;
-		height: 100%;
-		/* width: calc(100% - 60rpx);
-	height: calc(100% - 40rpx);
-	padding: 20rpx 30rpx; */
+		/*height: 100%;*/
+    height: calc(100vh - 40rpx);
+    padding: 20rpx 30rpx;
 	}
 
 	.dragsort-before {}
@@ -813,19 +812,17 @@ export default {
 	.dragsort-view {
 		position: absolute !important;
 		display: flex;
-		/* height: 80px; */
 		align-items: center;
-		/* width: 20%; */
 		text-align: center;
-		/* background-color: #C0C4CC; */
+		 background-color: #C0C4CC;
 		color: #fff;
-		/* border-radius: 5px; */
+		 border-radius: 5px;
 		box-sizing: border-box;
 		z-index: 90;
 	}
 
 	.dragsort-view-active {
-		/* box-shadow: 0 0 40rpx #DDDDDD; */
+    box-shadow: 0 0 40rpx #DDDDDD;
 		z-index: 99;
 	}
 
@@ -835,9 +832,6 @@ export default {
 		font-size: 16px;
 		width: 100%;
 		height: 100%;
-	}
-	.dragsort-view-item-image{
-		/* width: 100%; */
 	}
 
 	.btnAdd{
@@ -853,6 +847,5 @@ export default {
 		color: #B2B2B2;
 		font-size: 90rpx;
 	}
-	/* 页面布局样式END */
 
 </style>
