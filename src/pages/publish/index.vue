@@ -1,7 +1,7 @@
 <template>
   <!-- 组件必须设置高度，否则内部容器填充不起来 -->
   <view class="w-full overflow-auto album-content">
-    <r-album ref="rAlbum" v-model="list" @sort="onAlbumSort" @click="onAlbumClick"
+    <lz-album ref="rAlbum" v-model="list" @sort="onAlbumSort" @click="onAlbumClick"
              @add="onAlbumAdd" @delete="onAlbumDelete">
       <template v-slot:before>
         <view class="px-3 pt-2">
@@ -22,18 +22,18 @@
                     :loading="loading">发表</u-button>
         </view>
       </template>
-    </r-album>
+    </lz-album>
   </view>
 </template>
 
 <script>
-import RAlbum from '@/components/r-album'
+import LzAlbum from '@/components/lz-album'
 import { ImgList } from '@/utils/enum'
 import { dbRequest } from '@/api/common'
 
 export default {
   components: {
-    RAlbum,
+    LzAlbum,
   },
   data() {
     return {
