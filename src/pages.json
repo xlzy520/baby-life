@@ -10,17 +10,7 @@
       }
     },
     {
-      "path": "pages/publish/index",
-      "style": {
-        "navigationBarTitleText": "执笔"
-      }
-    },
-
-    {
-      "path": "pages/article/index",
-      "style": {
-        "navigationBarTitleText": "查看文章"
-      }
+      "path": "pages/publish/index"
     },
     {
       "path": "pages/editor/index",
@@ -35,33 +25,30 @@
       }
     },
     {
-      "path": "pages/album/index",
-      "style": {
-        "navigationBarTitleText": "相册"
-      }
+      "path": "pages/album/index"
     }
   ],
   "tabBar": {
     "color": "#7F8389",
-    "selectedColor": "#0091FF",
+    "selectedColor": "#fba414",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "/static/tabBar/icon-home.png",
-        "selectedIconPath": "/static/tabBar/icon-home-selected.png"
+        "text": "动态",
+        "iconPath": "/static/tabBar/home.png",
+        "selectedIconPath": "/static/tabBar/home-selected.png"
       },
       {
         "pagePath": "pages/publish/index",
-        "text": "执笔",
-        "iconPath": "/static/tabBar/icon-tabbar-mine.png",
-        "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
+        "text": "小橘子",
+        "iconPath": "/static/tabBar/orange.png",
+        "selectedIconPath": "/static/tabBar/orange-selected.png"
       },
       {
         "pagePath": "pages/album/index",
         "text": "相册",
-        "iconPath": "/static/tabBar/icon-tabbar-mine.png",
-        "selectedIconPath": "/static/tabBar/icon-tabbar-mine-selected.png"
+        "iconPath": "/static/tabBar/album.png",
+        "selectedIconPath": "/static/tabBar/album-selected.png"
       }
     ]
   },
@@ -69,7 +56,7 @@
   "globalStyle": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "吕萧潇",
+    "navigationBarTitleText": "吕萧潇——小橘子",
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true,
     "onReachBottomDistance": 60,
