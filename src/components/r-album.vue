@@ -683,6 +683,7 @@ export default {
                     delete item.tempFilePath
                     this.saveToDB({
                       cloudPath: res.fileID,
+                      createTime: Date.now(),
                       ...item,
                     })
                     self.$emit('add', {
