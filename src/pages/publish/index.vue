@@ -16,7 +16,7 @@
             <u-cell-item title="萧潇提示" value="可选择36张图片，一次最多9张" icon="star" :arrow="false" />
           </u-cell-group>
           <u-cell-group>
-            <u-cell-item title="所在位置" :value="location" icon="map" />
+            <u-cell-item title="所在位置" :value="location" icon="map" :arrow="false" />
           </u-cell-group>
           <u-button type="success" open-type="getUserProfile" @click="prePublish" ripple
                     :loading="loading">发表</u-button>
@@ -28,8 +28,8 @@
 
 <script>
 import LzAlbum from '@/components/lz-album'
-import { ImgList } from '@/utils/enum'
-import { dbRequest } from '@/api/common'
+import { dbRequest, getWeather } from '@/api/common'
+import { getLocation, mapSearch, reverseGeocoder } from '@/utils'
 
 export default {
   components: {
@@ -41,16 +41,54 @@ export default {
       list: [],
       content: '',
       location: '深圳市',
+
       loading: false,
       userInfo: null,
       openid: '',
+      weather: '',
+      lon_lat: {},
     }
   },
   onLoad() {
     this.openid = uni.getStorageSync('openid')
     this.userInfo = uni.getStorageSync('userInfo')
   },
+  onShow() {
+    this.getLocation()
+  },
   methods: {
+    getLocation() {
+      getLocation()
+        .then(res => {
+          const { longitude, latitude } = res
+          this.lon_lat = { longitude, latitude }
+          this.getLocationInfo({ longitude, latitude })
+          // this.getNearbyAttractions(longitude, latitude)
+          this.getWeather(latitude + ':' + longitude)
+        })
+    },
+    getLocationInfo(location) {
+      reverseGeocoder(location)
+        .then(res => {
+          console.log('当前位置信息：', res)
+          const { province, city, district } = res.result.ad_info
+          this.location = province + city + district
+        })
+    },
+    getNearbyAttractions(longitude, latitude) {
+      mapSearch('社区', {
+        longitude,
+        latitude,
+      }).then(res => {
+        console.log(res)
+      })
+    },
+    getWeather(area) {
+      getWeather(area).then(([error, res]) => {
+        const weatherInfo = res.data.results[0].now
+        this.weather = weatherInfo.text + '：' + weatherInfo.temperature + '°'
+      })
+    },
     queryOpenid(openid) {
       const actions = [
         {
@@ -101,8 +139,9 @@ export default {
     },
     publish() {
       const imgList = []
-      if (this.$refs.rAlbum.list) {
-        this.$refs.rAlbum.list.forEach(media => {
+      const list = this.$refs.rAlbum.list
+      if (list) {
+        list.forEach(media => {
           if (media.cloudPath) {
             const {
               cloudPath, fileType, height, id, size, sortID, width,
@@ -125,6 +164,7 @@ export default {
               imgList,
               name: this.userInfo.nickName,
               avatar: this.userInfo.avatarUrl,
+              lon_lat: this.lon_lat,
             },
           },
         }
