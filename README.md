@@ -17,7 +17,7 @@
 ### 安装启动
 **前置要求**
 1. 开启一个云服务，选择好云服务空间，在config.js中配置
-2. 创建好云数据库, 上传云函数(位于static文件夹中)
+2. 创建好云数据库(blog、album、user), 上传云函数(位于static文件夹中)
 3. Node.js > 12
 4. 启动项目，具体使用方式看如下项目
 [uniapp-tailwind-uview-starter](https://github.com/xlzy520/uniapp-tailwind-uview-starter)
