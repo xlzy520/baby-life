@@ -114,8 +114,10 @@ export default {
         return `今天 ${time.format('HH:mm')}`
       } else if (time.isYesterday()) {
         return `昨天 ${time.format('HH:mm')}`
+      } else if (new Date().getFullYear().toString() === time.format('YYYY')) {
+        return time.format('MM月DD日 HH时mm分ss')
       } else {
-        return time.format('YYYY年MM月DD日 HH时mm分ss秒')
+        return time.format('YYYY年MM月DD日 HH时mm分ss')
       }
     },
 
