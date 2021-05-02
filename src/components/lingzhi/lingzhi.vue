@@ -9,25 +9,28 @@
         </view>
       </view>
       <view class="flex flex-auto overflow-hidden user__content">
-        <view class="layout-col-slide flex-auto overflow-hidden user__content-main">
-          <text class="user__content-title truncate" @click.stop="clickUser()">{{ detail.name }}</text>
+        <view class="layout-col-slide flex-auto overflow-hidden pl-2">
+          <text class="truncate" @click.stop="clickUser()">
+            {{ detail.name }}</text>
           <text class="user__content-note text-gray-400 truncate">{{
               timestampFormat(detail.publishTime) }}</text>
         </view>
-        <view class="user__content-extra">
+        <view class="layout-col-slide">
           <text class="text-gray-400 location">{{detail.location}}</text>
+          <text class="text-gray-400 weather">{{detail.weather}}</text>
         </view>
       </view>
     </view>
 
     <view class="text break-words">{{detail.content}}</view>
-    <view class="allImage">
+    <view class="layout-start-wrap mt-1">
       <view class="imgList">
-        <view class="images" v-for="(item,index) in imgList" :key="index">
+        <view class="mr-1 inline-block" v-for="(item,index) in imgList" :key="index">
           <video class="oneimg" v-if="item.fileType === 'video'" :src="item.cloudPath"
-                 :style="mediaStyle"></video>
+                 :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></video>
           <image v-else @click.stop="previewImg(index)" class="oneimg" :src="item.cloudPath"
-                 mode="aspectFill" lazy-load :style="mediaStyle"></image>
+                 mode="aspectFill" lazy-load
+                 :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></image>
         </view>
       </view>
     </view>
@@ -53,14 +56,6 @@ export default {
       imgWidth: 0,	// 图片宽度
       imgHeight: 0,	// 图片高度
     }
-  },
-  computed: {
-    mediaStyle() {
-      return {
-        width: this.imgWidth + 'px',
-        'max-height': this.imgHeight + 'px',
-      }
-    },
   },
   mounted() {
     const res = uni.getSystemInfoSync()
@@ -108,9 +103,9 @@ export default {
       } else if (time.isYesterday()) {
         return `昨天 ${time.format('HH:mm')}`
       } else if (new Date().getFullYear().toString() === time.format('YYYY')) {
-        return time.format('MM月DD日 HH时mm分ss')
+        return time.format('MM月DD日 HH:mm:ss')
       } else {
-        return time.format('YYYY年MM月DD日 HH时mm分ss')
+        return time.format('YYYY年MM月DD日 HH:mm:ss')
       }
     },
 
@@ -144,21 +139,11 @@ export default {
 </script>
 
 <style>
-.allImage {
-  display: flex;
-  margin-top: 10upx;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
 .imgList{
   margin: 0 3%;
 }
 .text{
   margin: 1% 3% 2%;
-}
-.images {
-  margin-right: 10upx;
-  display: inline-block;
 }
 .user__header, .user__header-image {
   width: 45px;
@@ -173,13 +158,10 @@ export default {
 .user__content{
   padding: 2px 0;
 }
-.user__content-main{
-  padding-left: 10px;
-}
 .user__content-note{
   font-size: 11px;
 }
-.location{
+.location, .weather{
   padding: 3px;
   font-size: 11px;
 }

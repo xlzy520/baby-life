@@ -56,6 +56,14 @@
   flex-wrap: wrap;
 }
 
+/*从左到右, 换行*/
+.layout-start-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
 
 /*上下排列*/
 .layout-col-slide {

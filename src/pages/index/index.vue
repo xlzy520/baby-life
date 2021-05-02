@@ -1,6 +1,8 @@
 <template>
   <view class="pb-1">
-    <Lingzhi v-for="(item,index) in list" :key="item.id" :item="item"
+    <Lingzhi v-for="(item,index) in list"
+             :key="item.id"
+             :detail="item"
              :imgList="item.imgList"
              @clickDynamic="clickDynamic(index)"
              @clickUser="clickUser(item.id)">
@@ -11,7 +13,7 @@
 
 <script>
 import Lingzhi from '@/components/lingzhi/lingzhi'
-import { db, dbRequest } from '@/api/common'
+import { dbRequest } from '@/api/common'
 import { getList } from '@/utils/mixins'
 
 export default {
@@ -21,16 +23,11 @@ export default {
   mixins: [getList],
   data() {
     return {
-      // list: [],
 
-      // pageNum: 1,
-      // pageSize: 20,
-      // noMore: false
     }
   },
   onLoad(e) {
     console.log(e)
-    // this.getList()
   },
   methods: {
     getList(isRefresh) {
@@ -71,8 +68,7 @@ export default {
   onPullDownRefresh() {
     this.getList()
   },
-  onShow(e) {
-    console.log(e)
+  onShow() {
     // this.getList()
   },
 }
