@@ -18,6 +18,9 @@
           <u-cell-group>
             <u-cell-item title="所在位置" :value="location" icon="map" :arrow="false" />
           </u-cell-group>
+          <u-cell-group>
+            <u-cell-item title="当前天气" :value="weather" icon="heart" :arrow="false" />
+          </u-cell-group>
           <u-button type="success" open-type="getUserProfile" @click="prePublish" ripple
                     :loading="loading">发表</u-button>
         </view>
