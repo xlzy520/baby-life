@@ -7,6 +7,15 @@
              @clickDynamic="clickDynamic(index)"
              @clickUser="clickUser(item.id)">
     </Lingzhi>
+    <u-calendar v-model="calendarShow" :mode="mode" @change="changePublishTime"></u-calendar>
+    <u-modal v-model="inputShow" title="请输入新的内容" @confirm="changeContent">
+      <view class="p-4 slot-content">
+        <u-input v-model="newContent" type="textarea" :border="true" :height="100"
+                 placeholder="请输入..."
+                 :auto-height="true" />
+      </view>
+    </u-modal>
+    <u-action-sheet :list="actionList" v-model="show" @click="handleActionClick"></u-action-sheet>
     <u-loadmore :status="status" icon-type="flower" :load-text="loadText" />
   </view>
 </template>
@@ -23,13 +32,63 @@ export default {
   mixins: [getList],
   data() {
     return {
-
+      show: false,
+      actionList: [
+        { text: '修改发布时间' },
+        { text: '修改发布内容' }
+      ],
+      mode: 'date',
+      calendarShow: false,
+      curTarget: {},
+      inputShow: false,
+      newContent: '',
     }
   },
   onLoad(e) {
     console.log(e)
   },
   methods: {
+    handleActionClick(index) {
+      const actionMap = [
+        this.updatePublishTime,
+        this.updateContent
+      ]
+      actionMap[index]()
+    },
+    updatePublishTime() {
+      this.calendarShow = true
+    },
+    changePublishTime(data) {
+      const timestamp = this.$dayjs(data.result).valueOf()
+      this.submitUpdate({
+        publishTime: timestamp,
+      })
+    },
+    changeContent() {
+      this.submitUpdate({
+        content: this.newContent,
+      })
+    },
+    updateContent() {
+      this.inputShow = true
+    },
+    submitUpdate(data) {
+      const actions = [
+        {
+          method: 'doc',
+          params: [this.curTarget._id],
+        },
+        {
+          method: 'update',
+          params: {
+            data,
+          },
+        }
+      ]
+      dbRequest('blog', actions).then(res => {
+        this.getList(true)
+      })
+    },
     getList(isRefresh) {
       uni.showLoading({ title: '获取数据中...' })
       const skipNum = (this.pageNum - 1) * this.pageSize
@@ -53,13 +112,13 @@ export default {
           uni.stopPullDownRefresh()
         })
     },
-    clickDynamic(e) {
-      console.log('childDynamic')
+    clickDynamic(index) {
+      this.curTarget = this.list[index]
+      this.show = true
     },
     // 点击用户信息
     clickUser(e) {
       console.log(e)
-      console.log('childUser')
     },
   },
   onReachBottom() {
@@ -74,11 +133,6 @@ export default {
 }
 </script>
 
-<style>
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+<style lang="scss">
+
 </style>
