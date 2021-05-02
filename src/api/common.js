@@ -7,6 +7,8 @@ const errorMessageError = {
   '-502005': '数据库或数据表不存在',
 }
 
+const needFnMethods = ['orderBy', 'doc']
+
 export const dbRequest = (collectionName, actions = []) => new Promise(((resolve, reject) => {
   let baseService = db.collection(collectionName)
   if (!actions.length) {
@@ -17,14 +19,13 @@ export const dbRequest = (collectionName, actions = []) => new Promise(((resolve
     const { method, params } = item
     if (!params) {
       baseService = baseService[method]()
-    } else if (method === 'orderBy') {
+    } else if (needFnMethods.includes(method)) {
       baseService = baseService[method](...params)
     } else {
       baseService = baseService[method](params)
     }
   }
   baseService.then(res => {
-    console.log(res)
     resolve(res)
   }).catch(err => {
     const msg = errorMessageError[err.errCode] || ''
