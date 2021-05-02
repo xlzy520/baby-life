@@ -1,12 +1,7 @@
 <template>
   <view class="pb-1">
-    <Lingzhi v-for="(item,index) in list" :key="item.id"
+    <Lingzhi v-for="(item,index) in list" :key="item.id" :item="item"
              :imgList="item.imgList"
-             :avatar="item.avatar"
-             :name="item.name"
-             :publishTime="item.publishTime"
-             :content="item.content"
-             :location="item.location"
              @clickDynamic="clickDynamic(index)"
              @clickUser="clickUser(item.id)">
     </Lingzhi>
