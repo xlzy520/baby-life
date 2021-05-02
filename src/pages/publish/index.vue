@@ -143,17 +143,19 @@ export default {
     publish() {
       const imgList = []
       const list = this.$refs.rAlbum.list
-      if (list) {
-        list.forEach(media => {
-          if (media.cloudPath) {
-            const {
-              cloudPath, fileType, height, id, size, sortID, width,
-            } = media
-            imgList.push({
-              cloudPath, fileType, height, id, size, sortID, width,
-            })
-          }
-        })
+      list.forEach(media => {
+        if (media.cloudPath) {
+          const {
+            cloudPath, fileType, height, id, size, sortID, width,
+          } = media
+          imgList.push({
+            cloudPath, fileType, height, id, size, sortID, width,
+          })
+        }
+      })
+      if (!imgList.length && !this.content) {
+        uni.showToast({ title: '请输入内容或上传', icon: 'none' })
+        return
       }
       const actions = [
         {
@@ -168,6 +170,7 @@ export default {
               name: this.userInfo.nickName,
               avatar: this.userInfo.avatarUrl,
               lon_lat: this.lon_lat,
+              weather: this.weather,
             },
           },
         }
@@ -210,6 +213,7 @@ export default {
 .moment-think{
   ::v-deep .u-input__input{
     height: 300upx;
+    font-size: 16px;
   }
 }
 </style>
