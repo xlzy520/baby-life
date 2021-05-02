@@ -21,7 +21,6 @@ module.exports = {
     'borderWidth',
     'boxSizing',
     'clear',
-    'cursor',
     'display',
     'fill',
     'flex',
