@@ -1,4 +1,5 @@
-// import _request from '@/utils/request'
+import request from '@/utils/request'
+
 wx.cloud.init()
 export const db = wx.cloud.database()
 
@@ -16,12 +17,10 @@ export const dbRequest = (collectionName, actions = []) => new Promise(((resolve
     const { method, params } = item
     if (!params) {
       baseService = baseService[method]()
+    } else if (method === 'orderBy') {
+      baseService = baseService[method](...params)
     } else {
-      if (method === 'orderBy') {
-        baseService = baseService[method](...params)
-      } else {
-        baseService = baseService[method](params)
-      }
+      baseService = baseService[method](params)
     }
   }
   baseService.then(res => {
@@ -37,12 +36,8 @@ export const dbRequest = (collectionName, actions = []) => new Promise(((resolve
   })
 }))
 
-export default {
-  getBlogList() {
-    db.collection('blog').get().then(res => {
-      console.log(res)
-      return res
-    })
-  },
-
+export function getWeather(data) {
+  return uni.request({
+    url: `https://api.seniverse.com/v3/weather/now.json?key=7ka55qtzvvc4re1y&location=${data}`,
+  })
 }
