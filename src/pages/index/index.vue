@@ -15,6 +15,8 @@
                  :auto-height="true" />
       </view>
     </u-modal>
+    <u-modal v-model="removeShow" show-cancel-button content="确认删除这条记录吗?"
+             @confirm="removeItem"></u-modal>
     <u-action-sheet :list="actionList" v-model="show" @click="handleActionClick"></u-action-sheet>
     <u-loadmore :status="status" icon-type="flower" :load-text="loadText" />
   </view>
@@ -35,12 +37,18 @@ export default {
       show: false,
       actionList: [
         { text: '修改发布时间' },
-        { text: '修改发布内容' }
+        { text: '修改发布内容' },
+        {
+          text: '删除这条内容',
+          color: '#ff001c',
+        }
+
       ],
       mode: 'date',
       calendarShow: false,
       curTarget: {},
       inputShow: false,
+      removeShow: false,
       newContent: '',
     }
   },
@@ -50,13 +58,11 @@ export default {
   methods: {
     handleActionClick(index) {
       const actionMap = [
-        this.updatePublishTime,
-        this.updateContent
+        'calendarShow',
+        'inputShow',
+        'removeShow'
       ]
-      actionMap[index]()
-    },
-    updatePublishTime() {
-      this.calendarShow = true
+      this[actionMap[index]] = true
     },
     changePublishTime(data) {
       const timestamp = this.$dayjs(data.result).valueOf()
@@ -69,8 +75,19 @@ export default {
         content: this.newContent,
       })
     },
-    updateContent() {
-      this.inputShow = true
+    removeItem() {
+      const actions = [
+        {
+          method: 'doc',
+          params: [this.curTarget._id],
+        },
+        {
+          method: 'remove',
+        }
+      ]
+      dbRequest('blog', actions).then(res => {
+        this.getList(true)
+      })
     },
     submitUpdate(data) {
       const actions = [
