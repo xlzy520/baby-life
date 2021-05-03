@@ -1,5 +1,5 @@
 <template>
-	<view class="w-full h-full overflow-hidden dragsort-box">
+	<view class="w-full h-full dragsort-box">
 		<movable-area id="drag" class="w-full dragsort-area">
 			<view id="dragsort-before" class="dragsort-before">
 				<slot name="before"></slot>
@@ -28,7 +28,8 @@
 			<view id="dragsort-after" class="dragsort-after">
 				<slot name="after"></slot>
 			</view>
-			<view id="dragsort-delete" class="w-full layout-col-around dragsort-delete" :class="isDrag?'opacity':''">
+			<view id="dragsort-delete" class="w-full layout-col-around dragsort-delete"
+            :class="isDrag?'opacity':''">
 				<u-icon class="deleteicon" name="trash" color="#FFFFFF" size="34"></u-icon>
 				<view>{{deleteText}}</view>
 			</view>
@@ -671,7 +672,7 @@ export default {
                 const src = item.tempFilePath
                 const filePath = item.tempFilePath
                 // 上传图片
-                const cloudPath = Date.now().toString()+ filePath.match(/\.[^.]+?$/)[0]
+                const cloudPath = Date.now().toString() + filePath.match(/\.[^.]+?$/)[0]
                 wx.cloud.uploadFile({
                   cloudPath,
                   filePath,
