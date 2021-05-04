@@ -4,28 +4,16 @@
   },
   "pages": [
     {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "首页"
-      }
+      "path": "pages/album/index"
     },
     {
       "path": "pages/publish/index"
     },
     {
-      "path": "pages/editor/index",
+      "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "编辑器"
+        "navigationBarTitleText": "首页"
       }
-    },
-    {
-      "path": "pages/photo-detail/index",
-      "style": {
-        "navigationBarTitleText": "照片详情"
-      }
-    },
-    {
-      "path": "pages/album/index"
     }
   ],
   "tabBar": {
