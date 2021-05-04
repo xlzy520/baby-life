@@ -195,8 +195,15 @@ export default {
         }
       ]
       dbRequest('blog', actions).then(res => {
+        this.reset()
         uni.switchTab({ url: '/pages/index/index' })
       })
+    },
+    reset() {
+      this.$refs.rAlbum.reset()
+      this.$refs.rAlbum.init()
+      this.$refs.rAlbum.initGrid()
+      this.content = ''
     },
     onAlbumSort(list) {
       // 返回排序后的数组集合
