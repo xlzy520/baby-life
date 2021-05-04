@@ -58,6 +58,7 @@
     "setting": {
       "urlCheck": false
     },
+    "cloudfunctionRoot": "/static/cloudfunctions-tcb/",
     "usingComponents": true,
     "permission": {
       "scope.userLocation": {
