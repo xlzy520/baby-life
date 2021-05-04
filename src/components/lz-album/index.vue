@@ -684,7 +684,8 @@ export default {
                 const src = item.tempFilePath
                 const filePath = item.tempFilePath
                 // 上传图片
-                const cloudPath = Date.now().toString() + filePath.match(/\.[^.]+?$/)[0]
+                const prefix = item.fileType === 'video' ? 'video' : 'image'
+                const cloudPath = prefix + '-' + Date.now().toString() + filePath.match(/\.[^.]+?$/)[0]
                 wx.cloud.uploadFile({
                   cloudPath,
                   filePath,
