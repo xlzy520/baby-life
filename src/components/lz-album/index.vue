@@ -122,6 +122,10 @@ export default {
       type: String,
       default: '',
     },
+    address: {
+      type: String,
+      default: '',
+    },
   },
   watch: {
     value: {

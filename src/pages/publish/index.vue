@@ -2,6 +2,7 @@
   <!-- 组件必须设置高度，否则内部容器填充不起来 -->
   <view class="w-full overflow-auto album-content">
     <lz-album ref="rAlbum" v-model="list" :location="location" :lon_lat="lon_lat" :weather="weather"
+              :address="address"
               @sort="onAlbumSort" @click="onAlbumClick" @add="onAlbumAdd" @delete="onAlbumDelete">
       <template v-slot:before>
         <view class="px-3 pt-2">
@@ -79,7 +80,7 @@ export default {
           longitude, latitude, name, address,
         } = res
         this.lon_lat = { longitude, latitude }
-        this.address = address
+        this.address = address + name
         this.getLocationInfo({ longitude, latitude })
         this.getWeather(latitude + ':' + longitude)
       })
@@ -162,12 +163,26 @@ export default {
       const list = this.$refs.rAlbum.list
       list.forEach(media => {
         console.log(media)
+        const {
+          lon_lat, location, address, weather,
+        } = this
         if (media.cloudPath) {
           const {
             cloudPath, fileType, height, id, size, sortID, width, thumbCloudPath,
           } = media
           imgList.push({
-            cloudPath, fileType, height, id, size, sortID, width, thumbCloudPath,
+            cloudPath,
+            fileType,
+            height,
+            id,
+            size,
+            sortID,
+            width,
+            thumbCloudPath,
+            lon_lat,
+            location,
+            address,
+            weather,
           })
         }
       })
