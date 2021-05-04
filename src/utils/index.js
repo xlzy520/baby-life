@@ -205,3 +205,17 @@ export function mapSearch(keyword, location) {
     })
   })
 }
+
+export function fromNowFormat(timestamp) {
+  if (!timestamp) return '未知'
+  const time = dayjs(timestamp)
+  if (time.isToday()) {
+    return '今天'
+  } else if (time.isYesterday()) {
+    return '昨天'
+  } else if (new Date().getFullYear().toString() === time.format('YYYY')) {
+    return time.format('MM月DD日')
+  } else {
+    return time.format('YYYY年MM月DD日')
+  }
+}
