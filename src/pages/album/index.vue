@@ -3,7 +3,7 @@
     <u-search placeholder="时间、地点、天气..." v-model="keyword"></u-search>
     <view class="">
       <u-tabs :list="tabList" active-color="#fba414" inactive-color="#606266" :is-scroll="false"
-              height="70" :current="current" @change="change"></u-tabs>
+              height="70" :current="current" @change="changeTab"></u-tabs>
     </view>
     <view class="p-2" v-for="(dateItem,index) in dates" :key="dateItem">
       <view class="pl-2 py-2 layout-slide">
@@ -14,7 +14,8 @@
         </view>
       </view>
       <view class="grid-imgs">
-        <view class="img-item" v-for="item in imgMapping[dateItem]" :key="item.id">
+        <view class="img-item" v-for="item in imgMapping[dateItem]" :key="item.cloudPath"
+              @click="previewImg(item)">
           <u-image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
                    width="165" height="200" :lazy-load="true"></u-image>
         </view>
@@ -42,9 +43,11 @@ export default {
       tabList: [
         {
           name: '照片',
+          type: 'image',
         },
         {
           name: '视频',
+          type: 'video',
         }, {
           name: '图集',
         }, {
@@ -63,6 +66,17 @@ export default {
 
   },
   methods: {
+    previewImg(data) {
+      const index = this.list.findIndex(value => value.cloudPath === data.cloudPath)
+      uni.previewImage({
+        count: this.list[index].cloudPath,
+        current: index,
+        urls: this.list.map(v => v.cloudPath),
+        longPressActions: {
+          itemList: ['保存图片'],
+        },
+      })
+    },
     chooseLocation(data) {
       const key = setting.MAP_KEY // 使用在腾讯位置服务申请的key
       const referer = '萧潇生活' // 调用插件的app的名称
@@ -75,14 +89,24 @@ export default {
         url: 'plugin://chooseLocation/index?key=' + key + '&referer=' + referer + '&location' + location,
       })
     },
-    change(index) {
+    changeTab(index) {
       this.current = index
+      if (index < 2) {
+        this.getList(true)
+      }
     },
     getList(isRefresh) {
       uni.showLoading({ title: '获取数据中...' })
       const skipNum = (this.pageNum - 1) * this.pageSize
+      const fileType = this.tabList[this.current].type
       const actions = [
         { method: 'orderBy', params: ['createTime', 'desc'] },
+        {
+          method: 'where',
+          params: {
+            fileType,
+          },
+        },
         { method: 'get' }
       ]
       if (skipNum) {
