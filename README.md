@@ -21,3 +21,12 @@
 3. Node.js > 12
 4. 启动项目，具体使用方式看如下项目
 [uniapp-tailwind-uview-starter](https://github.com/xlzy520/uniapp-tailwind-uview-starter)
+
+### Todo
+> 想要加的功能点 
+
+- 生日
+- 出生时间
+- 周岁倒数日
+- 照片AI识别进行分类、标签化
+- 一些工具
