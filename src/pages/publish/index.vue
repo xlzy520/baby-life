@@ -16,7 +16,7 @@
             <u-cell-item title="萧潇提示" value="可选择36张图片，一次最多9张" icon="star" :arrow="false" />
           </u-cell-group>
           <u-cell-group>
-            <u-cell-item title="所在位置" :value="location" icon="map" :arrow="false" />
+            <u-cell-item title="所在位置" :value="location" icon="map" @click="chooseLocation" />
           </u-cell-group>
           <u-cell-group>
             <u-cell-item title="当前天气" :value="weather" icon="heart" :arrow="false" />
@@ -44,6 +44,7 @@ export default {
       list: [],
       content: '',
       location: '深圳市',
+      address: '', // 完整地址
 
       loading: false,
       userInfo: null,
@@ -55,9 +56,10 @@ export default {
   onLoad() {
     this.openid = uni.getStorageSync('openid')
     this.userInfo = uni.getStorageSync('userInfo')
+    this.chooseLocation()
   },
   onShow() {
-    this.getLocation()
+    // this.getLocation()
   },
   methods: {
     getLocation() {
@@ -68,6 +70,21 @@ export default {
           this.getLocationInfo({ longitude, latitude })
           // this.getNearbyAttractions(longitude, latitude)
           this.getWeather(latitude + ':' + longitude)
+        })
+    },
+    chooseLocation() {
+      wx.chooseLocation({}).then(res => {
+        console.log(res)
+        const {
+          longitude, latitude, name, address,
+        } = res
+        this.lon_lat = { longitude, latitude }
+        this.address = address
+        this.getLocationInfo({ longitude, latitude })
+        this.getWeather(latitude + ':' + longitude)
+      })
+        .catch(() => {
+          this.getLocation()
         })
     },
     getLocationInfo(location) {
@@ -165,6 +182,7 @@ export default {
               openid: this.openid,
               content: this.content,
               location: this.location,
+              address: this.address,
               publishTime: Date.now(),
               imgList,
               name: this.userInfo.nickName,
