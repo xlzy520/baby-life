@@ -26,6 +26,7 @@
 import Lingzhi from '@/components/lingzhi/lingzhi'
 import { dbRequest } from '@/api/common'
 import { getList } from '@/utils/mixins'
+import { wxCloudCallFunction } from '@/utils/request'
 
 export default {
   components: {
@@ -68,6 +69,21 @@ export default {
       const timestamp = this.$dayjs(data.result).valueOf()
       this.submitUpdate({
         publishTime: timestamp,
+      })
+      const imgList = this.curTarget.imgList
+      if (imgList.length) {
+        this.changeRelatedImgCreateTime(imgList, timestamp)
+      }
+    },
+    changeRelatedImgCreateTime(imgList, timestamp) {
+      wxCloudCallFunction('multiUpdate', {
+        collectionName: 'album',
+        ids: imgList.map(value => value.id),
+        newData: {
+          createTime: timestamp,
+        },
+      }).then(res => {
+        this.$showToast('修改发布时间成功')
       })
     },
     changeContent() {
