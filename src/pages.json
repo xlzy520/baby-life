@@ -4,16 +4,16 @@
   },
   "pages": [
     {
-      "path": "pages/album/index"
-    },
-    {
-      "path": "pages/publish/index"
-    },
-    {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "首页"
       }
+    },
+    {
+      "path": "pages/album/index"
+    },
+    {
+      "path": "pages/publish/index"
     }
   ],
   "tabBar": {
