@@ -1,8 +1,8 @@
 <template>
   <!-- 组件必须设置高度，否则内部容器填充不起来 -->
   <view class="w-full overflow-auto album-content">
-    <lz-album ref="rAlbum" v-model="list" @sort="onAlbumSort" @click="onAlbumClick"
-             @add="onAlbumAdd" @delete="onAlbumDelete">
+    <lz-album ref="rAlbum" v-model="list" :location="location" :lon_lat="lon_lat" :weather="weather"
+              @sort="onAlbumSort" @click="onAlbumClick" @add="onAlbumAdd" @delete="onAlbumDelete">
       <template v-slot:before>
         <view class="px-3 pt-2">
           <u-input v-model="content" type="textarea" :focus="false" :maxlength="927"

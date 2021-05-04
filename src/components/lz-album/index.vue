@@ -110,6 +110,18 @@ export default {
       type: Number,
       default: () => 4,
     },
+    lon_lat: {
+      type: Object,
+      default: () => ({}),
+    },
+    location: {
+      type: String,
+      default: '',
+    },
+    weather: {
+      type: String,
+      default: '',
+    },
   },
   watch: {
     value: {
@@ -685,6 +697,9 @@ export default {
                     this.saveToDB({
                       cloudPath: res.fileID,
                       createTime: Date.now(),
+                      location: this.location,
+                      lon_lat: this.lon_lat,
+                      weather: this.weather,
                       ...item,
                     })
                     self.$emit('add', {
