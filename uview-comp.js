@@ -40,6 +40,7 @@ import UCircleProgress from 'uview-ui/components/u-circle-progress/u-circle-prog
 import UModal from 'uview-ui/components/u-modal/u-modal'
 import UActionSheet from 'uview-ui/components/u-action-sheet/u-action-sheet'
 import ULoadMore from 'uview-ui/components/u-loadmore/u-loadmore'
+import USearch from 'uview-ui/components/u-search/u-search'
 
 Vue.component('u-upload', UUpload)
 Vue.component('u-row', URow)
@@ -81,3 +82,4 @@ Vue.component('u-circle-progress', UCircleProgress)
 Vue.component('u-modal', UModal)
 Vue.component('u-action-sheet', UActionSheet)
 Vue.component('u-loadmore', ULoadMore)
+Vue.component('u-search', USearch)
