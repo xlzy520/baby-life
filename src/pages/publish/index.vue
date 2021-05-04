@@ -194,7 +194,7 @@ export default {
         }
       ]
       dbRequest('blog', actions).then(res => {
-        uni.reLaunch({ url: '/pages/index/index?refresh=1' })
+        uni.switchTab({ url: '/pages/index/index' })
       })
     },
     onAlbumSort(list) {
