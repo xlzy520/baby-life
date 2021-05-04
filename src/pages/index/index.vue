@@ -17,7 +17,7 @@
     </u-modal>
     <u-modal v-model="removeShow" show-cancel-button content="确认删除这条记录吗?"
              @confirm="removeItem"></u-modal>
-    <u-action-sheet :list="actionList" v-model="show" @click="handleActionClick"></u-action-sheet>
+    <u-action-sheet :list="actionList" v-model="actionListShow" @click="handleActionClick" />
     <u-loadmore :status="status" icon-type="flower" :load-text="loadText" />
   </view>
 </template>
@@ -34,7 +34,7 @@ export default {
   mixins: [getList],
   data() {
     return {
-      show: false,
+      actionListShow: false,
       actionList: [
         { text: '修改发布时间' },
         { text: '修改发布内容' },
@@ -131,7 +131,7 @@ export default {
     },
     clickDynamic(index) {
       this.curTarget = this.list[index]
-      this.show = true
+      this.actionListShow = true
     },
     // 点击用户信息
     clickUser(e) {
