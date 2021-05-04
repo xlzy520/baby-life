@@ -18,8 +18,7 @@
               @click="previewImg(item)">
           <lazy-video v-if="item.fileType === 'video'" :item="item" :img-width="150"
                       :img-height="120"></lazy-video>
-          <u-image v-else
-                   src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
+          <u-image v-else :src="item.cloudPath"
                    width="165" height="200" :lazy-load="true"></u-image>
         </view>
       </view>
