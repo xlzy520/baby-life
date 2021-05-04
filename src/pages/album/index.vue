@@ -16,7 +16,10 @@
       <view class="grid-imgs">
         <view class="img-item" v-for="item in imgMapping[dateItem]" :key="item.cloudPath"
               @click="previewImg(item)">
-          <u-image src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
+          <video v-if="item.fileType === 'video'" :src="item.cloudPath"
+                 :style="{width:'83px','max-height':'100px'}"></video>
+          <u-image v-else
+                   src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
                    width="165" height="200" :lazy-load="true"></u-image>
         </view>
       </view>
