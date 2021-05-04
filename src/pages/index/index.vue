@@ -107,6 +107,7 @@ export default {
       ]
       dbRequest('blog', actions).then(res => {
         this.getList(true)
+        this.preTotal -= 1
       })
     },
     submitUpdate(data) {
