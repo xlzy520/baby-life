@@ -28,6 +28,8 @@ import { dbRequest } from '@/api/common'
 import { getList } from '@/utils/mixins'
 import { wxCloudCallFunction } from '@/utils/request'
 
+const app = getApp()
+
 export default {
   components: {
     Lingzhi,
@@ -51,6 +53,8 @@ export default {
       inputShow: false,
       removeShow: false,
       newContent: '',
+      preTotal: 0,
+      loaded: false
     }
   },
   onLoad(e) {
@@ -129,20 +133,33 @@ export default {
         { method: 'orderBy', params: ['publishTime', 'desc'] },
         { method: 'get' }
       ]
-      if (skipNum) {
+      if (skipNum && skipNum !== this.preTotal) {
         actions.splice(0, 0, { method: 'skip', params: [skipNum] })
       }
       dbRequest('blog', actions)
         .then(res => {
           console.log(res)
           this.handleResFromMixin(res, v => v, isRefresh)
-        }).catch(() => {
-          this.status = 'nomore'
-          this.noMore = true
-        })
-        .finally(() => {
+        }).finally(() => {
           uni.hideLoading()
           uni.stopPullDownRefresh()
+        })
+    },
+    getCount() {
+      const actions = [
+        { method: 'count' }
+      ]
+      dbRequest('blog', actions)
+        .then(res => {
+          this.preTotal = res.total
+          if (res.total !== this.preTotal && this.loaded) {
+            this.getList(true)
+            this.loaded = true
+          }
+          if (res.total === this.list.length) {
+            this.status = 'nomore'
+            this.noMore = true
+          }
         })
     },
     clickDynamic(index) {
@@ -161,7 +178,7 @@ export default {
     this.getList()
   },
   onShow() {
-    // this.getList()
+    this.getCount()
   },
 }
 </script>
