@@ -691,21 +691,43 @@ export default {
                   filePath,
                   success: res => {
                     console.log('[上传文件] 成功：', res)
-                    if (item.fileType === 'video') {
-                      delete item.thumbTempFilePath
-                    }
                     delete item.tempFilePath
-                    this.saveToDB({
-                      cloudPath: res.fileID,
-                      createTime: Date.now(),
-                      location: this.location,
-                      lon_lat: this.lon_lat,
-                      weather: this.weather,
-                      ...item,
-                    })
-                    self.$emit('add', {
-                      ...item, src, cloudPath: res.fileID, sortID: self.maxSortID,
-                    })
+                    if (item.fileType === 'video') {
+                      wx.cloud.uploadFile({
+                        cloudPath: 'thumb-' + cloudPath,
+                        filePath: item.thumbTempFilePath,
+                      }).then(thumbRes => {
+                        delete item.thumbTempFilePath
+                        this.saveToDB({
+                          cloudPath: res.fileID,
+                          createTime: Date.now(),
+                          location: this.location,
+                          lon_lat: this.lon_lat,
+                          weather: this.weather,
+                          thumbCloudPath: thumbRes.fileID,
+                          ...item,
+                        })
+                        self.$emit('add', {
+                          ...item,
+                          src,
+                          cloudPath: res.fileID,
+                          sortID: self.maxSortID,
+                          thumbCloudPath: thumbRes.fileID,
+                        })
+                      })
+                    } else {
+                      this.saveToDB({
+                        cloudPath: res.fileID,
+                        createTime: Date.now(),
+                        location: this.location,
+                        lon_lat: this.lon_lat,
+                        weather: this.weather,
+                        ...item,
+                      })
+                      self.$emit('add', {
+                        ...item, src, cloudPath: res.fileID, sortID: self.maxSortID,
+                      })
+                    }
                   },
                   fail: e => {
                     console.error('[上传文件] 失败：', e)

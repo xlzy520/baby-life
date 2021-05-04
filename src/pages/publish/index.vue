@@ -161,12 +161,13 @@ export default {
       const imgList = []
       const list = this.$refs.rAlbum.list
       list.forEach(media => {
+        console.log(media)
         if (media.cloudPath) {
           const {
-            cloudPath, fileType, height, id, size, sortID, width,
+            cloudPath, fileType, height, id, size, sortID, width, thumbCloudPath,
           } = media
           imgList.push({
-            cloudPath, fileType, height, id, size, sortID, width,
+            cloudPath, fileType, height, id, size, sortID, width, thumbCloudPath,
           })
         }
       })
