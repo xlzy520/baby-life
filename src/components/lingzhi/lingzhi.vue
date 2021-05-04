@@ -26,9 +26,9 @@
     <view class="layout-start-wrap mt-1">
       <view class="imgList">
         <view class="mr-1 inline-block" v-for="(item,index) in imgList" :key="index">
-          <video class="oneimg" v-if="item.fileType === 'video'" :src="item.cloudPath"
-                 :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></video>
-          <image v-else @click.stop="previewImg(index)" class="oneimg" :src="item.cloudPath"
+          <lazy-video v-if="item.fileType === 'video'" :item="item" :img-width="imgWidth"
+                      :img-height="imgHeight"></lazy-video>
+          <image v-else @click.stop="previewImg(index)" :src="item.cloudPath"
                  mode="aspectFill" lazy-load
                  :style="{width:imgWidth+'px','max-height':imgHeight+'px'}"></image>
         </view>
@@ -39,7 +39,12 @@
 </template>
 
 <script>
+import LazyVideo from '../../components/lazy-video'
+
 export default {
+  components: {
+    LazyVideo,
+  },
   props: {
     imgList: {
       type: Array,

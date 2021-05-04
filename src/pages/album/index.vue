@@ -16,8 +16,8 @@
       <view class="grid-view" :class="{video: current === 1}">
         <view class="img-item" v-for="item in imgMapping[dateItem]" :key="item.cloudPath"
               @click="previewImg(item)">
-          <video v-if="item.fileType === 'video'" :src="item.cloudPath"
-                 :style="{width:'150px','max-height':'120px'}"></video>
+          <lazy-video v-if="item.fileType === 'video'" :item="item" :img-width="150"
+                      :img-height="120"></lazy-video>
           <u-image v-else
                    src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
                    width="165" height="200" :lazy-load="true"></u-image>
@@ -35,9 +35,11 @@ import { dbRequest } from '@/api/common'
 import { getList } from '@/utils/mixins'
 import { fromNowFormat } from '@/utils'
 import setting from '@/setting'
+import LazyVideo from '../../components/lazy-video'
 
 export default {
   components: {
+    LazyVideo,
   },
   mixins: [getList],
 
@@ -60,7 +62,7 @@ export default {
       title: 'Hello',
       imgMapping: {},
       dates: [],
-      loaded: false
+      loaded: false,
     }
   },
   onLoad() {
