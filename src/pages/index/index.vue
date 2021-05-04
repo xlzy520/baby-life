@@ -151,15 +151,15 @@ export default {
       ]
       dbRequest('blog', actions)
         .then(res => {
-          this.preTotal = res.total
+          this.loaded = true
           if (res.total !== this.preTotal && this.loaded) {
             this.getList(true)
-            this.loaded = true
           }
           if (res.total === this.list.length) {
             this.status = 'nomore'
             this.noMore = true
           }
+          this.preTotal = res.total
         })
     },
     clickDynamic(index) {
