@@ -13,11 +13,11 @@
           <u-icon name="arrow-right" />
         </view>
       </view>
-      <view class="grid-imgs">
+      <view class="grid-view" :class="{video: current === 1}">
         <view class="img-item" v-for="item in imgMapping[dateItem]" :key="item.cloudPath"
               @click="previewImg(item)">
           <video v-if="item.fileType === 'video'" :src="item.cloudPath"
-                 :style="{width:'83px','max-height':'100px'}"></video>
+                 :style="{width:'150px','max-height':'120px'}"></video>
           <u-image v-else
                    src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3407686795,968933150&fm=26&gp=0.jpg"
                    width="165" height="200" :lazy-load="true"></u-image>
@@ -60,13 +60,14 @@ export default {
       title: 'Hello',
       imgMapping: {},
       dates: [],
+      loaded: false
     }
   },
   onLoad() {
 
   },
   onShow() {
-
+    this.getList(true)
   },
   methods: {
     previewImg(data) {
@@ -158,10 +159,13 @@ export default {
 </script>
 
 <style lang="scss">
-.grid-imgs{
+.grid-view{
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 20upx;
   grid-row-gap: 20upx;
+  &.video{
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>
