@@ -62,13 +62,18 @@ export default {
       imgMapping: {},
       dates: [],
       loaded: false,
+      previewing: false,
     }
   },
   onLoad() {
 
   },
   onShow() {
-    this.getList(true)
+    if (!this.previewing) {
+      this.getList(true)
+    } else {
+      this.previewing = false
+    }
   },
   methods: {
     previewImg(data) {
@@ -79,6 +84,9 @@ export default {
         urls: this.list.map(v => v.cloudPath),
         longPressActions: {
           itemList: ['保存图片'],
+        },
+        complete: result => {
+          this.previewing = true
         },
       })
     },
