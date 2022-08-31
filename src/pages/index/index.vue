@@ -59,6 +59,7 @@ export default {
   },
   onLoad(e) {
     console.log(e)
+
   },
   methods: {
     handleActionClick(index) {
@@ -137,11 +138,13 @@ export default {
       if (skipNum && skipNum !== this.preTotal) {
         actions.splice(0, 0, { method: 'skip', params: [skipNum] })
       }
-      dbRequest('blog', actions)
-        .then(res => {
-          console.log(res)
-          this.handleResFromMixin(res, v => v, isRefresh)
-        }).finally(() => {
+      const query = new this.$av.Query('blog')
+      query.limit(this.pageSize);
+      query.skip(skipNum);
+      query.descending('publishTime')
+      query.find().then(res => {
+        this.handleResFromMixin(res, v => v, isRefresh)
+      }).finally(() => {
           uni.hideLoading()
           uni.stopPullDownRefresh()
         })

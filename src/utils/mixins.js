@@ -24,8 +24,8 @@ export const getList = {
       this.getList(true)
     },
     handleResFromMixin(res, mapFn = v => v, isRefresh = false) {
-      const { data } = res
-      const transformedList = (data || []).map(mapFn)
+      const { _serverData } = res
+      const transformedList = (_serverData || []).map(mapFn)
       if (isRefresh) {
         this.list = transformedList
       } else {

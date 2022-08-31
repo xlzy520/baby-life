@@ -3,6 +3,19 @@ import formRules from '@/utils/formRules'
 import setting from '@/setting'
 // import '../uview-comp'
 
+const AV = require('./lib/av-core-min.js');
+const adapters = require('./lib/leancloud-adapters-weapp.js');
+
+AV.setAdapters(adapters);
+AV.init({
+  appId: 'cttNHy2dFGSYcjXZmjsv1Pk3-gzGzoHsz',
+  appKey: 'sxeY8ZAOSm9DNkGMwZx70HOi',
+  // 请将 xxx.example.com 替换为你的应用绑定的自定义 API 域名
+  serverURLs: "https://cttnhy2d.lc-cn-n1-shared.com",
+});
+Vue.prototype.$av = AV
+
+
 import divider from '@/components/divider'
 
 import dayjs from 'dayjs'
